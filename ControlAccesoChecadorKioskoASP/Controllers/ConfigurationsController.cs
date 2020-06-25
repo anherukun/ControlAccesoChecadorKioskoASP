@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ControlAccesoChecadorKioskoASP.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,6 +12,7 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
         // GET: Configurations
         public ActionResult Index()
         {
+            ViewData["Departments"] = new DepartmentRepository().RetriveAll();
             return View();
         }
     }

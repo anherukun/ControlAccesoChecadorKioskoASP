@@ -4,84 +4,68 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <div class="row" style="margin-top: 32px">
-        <h1>Configuraciones</h1>
+<script type="text/javascript">
+
+</script>
+
+    <div class="row" style="margin-top: 16px">
+        <h1 class="col-md-offset-3">Configuraciones</h1>
         <!--FORMULARIO DE CONFIGURACIONES-->
-        <div class="col-md-12" style="padding: 32px; background-color:#eeeeee; box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.40);">
-            <h2>Departamento</h2>
+        <div class="col-md-6 col-md-offset-3" style="padding: 32px; background-color:#eeeeee; margin-top: 16px; box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.40);">
+            <div class="row">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Departamento</label>
+                        <div class="input-group col-md-5">
+                            <select class="form-control" id="departmentSelect">
+                                @{
+                                    <option value="-1">Selecciona el departamento...</option>
 
-            <form id="form" action="~/Views/Home/Index" method="post" onsubmit="validateForm()">
-                <script type="text/javascript">
-                function validateIDEmploye() {
-                    var input = document.forms["form"]["idEmploye"]
-                    if (Number(input.value) < 0) {
-                        input.value = 0;
-                    }
-                    if (input.value.length == 6) {
-                        selectedEmploye = employesList.find(x => x.EmployeId === Number(input.value));
+                                    List<ControlAccesoChecadorKioskoASP.Models.Department> departments = ViewData["Departments"] as List<ControlAccesoChecadorKioskoASP.Models.Department>;
+                                    for (int i = 0; i < departments.Count; i++)
+                                    {
+                                        <option value="@i">@departments[i].DepartmentId  @departments[i].Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
 
-                        if (selectedEmploye != null) {
-                            document.getElementById("employeName").innerHTML = selectedEmploye.Name;
-                            validEmploye = true;
-                        }
-                        // for (var i = 0; i < employesList.length; i++) {
-                        //     if (employesList[i].EmployeID == Number(input.value)) {
-                        //         document.getElementById("employeName").innerHTML = employesList[i].Name;
-                        //         validEmploye = true;
-                        //     }
-                        // }
-                    } else {
-                        selectedEmploye = null;
-                        validEmploye = false;
-                        document.getElementById("employeName").innerHTML = "";
-                    }
-                }
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Registros por mostrar</label>
+                        <div class="input-group col-md-5">
+                            <input type="text" class="form-control" value="20" disabled>
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-danger">
+                                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-                function validateForm() {
-                    var input = document.forms["form"]["idEmploye"]
-                    if (input.value > 0 && validEmploye) {
-                        alert("EmployeID= " + selectedEmploye.EmployeId + " Employe Name= " + selectedEmploye.Name);
-                        return false;
-                    } else {
-                        alert("Debes de ingresar una ficha de trabajador valido");
-                    }
-                }
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Minutos para actualizar</label>
+                        <div class="input-group col-md-5">
+                            <input type="text" class="form-control" value="3" disabled>
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-danger">
+                                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
-                function clearForm() {
-                    selectedEmploye = null;
-                    validEmploye = false;
-                    document.forms["form"]["idEmploye"].value = "";
-                    document.getElementById("employeName").innerHTML = "";
-                }
-                </script>
-
-                @using (Html.BeginForm("Index", "Home", FormMethod.Post))
-                {
-                    <h4 style="margin-bottom:8px;"><b>Ficha:</b> </h4>
-                    @Html.TextBox("idEmploye", null, new
-                    {
-                        @class = "form-control",
-                        placeholder = "Ingresa tu ficha Ej. (582509)",
-                        type = "number",
-                        oninput = "validateIDEmploye()",
-               style = "font-size: 12pt;"
-                    })
-                    <h4 style="margin-bottom:8px; margin-top:16px;"><b>Trabajador:</b></h4>
-                    <h5 id="employeName" style="margin-bottom:8px;"></h5>
-                }
-
-            </form>
-
-            @{
-                string cookie1 = string.Empty;
-                cookie1 = ControlAccesoChecadorKioskoASP.Application.ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "clientCookie", "prueba 1") as string;
-            }
-            <div class="row" style="margin-top: 32px; padding-left: 16px;">
-                <a class="btn btn-danger" onclick="clearForm()">
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                </a>
-                <a class="btn btn-primary" onclick="validateForm()">
-                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>  Registrar Entrada
+            <div class="row" style="margin-top: 32px; padding-right: 16px; text-align:right">
+                <a class="btn btn-success" onclick="validateForm()">
+                    <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>  Guardar
                 </a>
             </div>
         </div>
