@@ -116,11 +116,11 @@
             <div class="row">
                 <div class="col-md-6">
                     <h4><b>Trabajador: </b></h4>
-                    <h5 id="selectedRegistryEmployName">ANGEL GERARDO JIMENEZ REYES</h5>
+                    <h5 id="selectedRegistryEmployName">...</h5>
                 </div>
                 <div class="col-md-6">
                     <h4><b>Hora de entrada: </b></h4>
-                    <h5 id="selectedRegistryIngress">08:00 am</h5>
+                    <h5 id="selectedRegistryIngress">--:--</h5>
                 </div>
             </div>
         </div>
@@ -154,9 +154,9 @@
                         smm = "0" + (mm);
 
                     if (hh > 12)
-                        return shh + ":" + smm + " pm";
+                        return shh + ":" + smm + " p.m.";
                     else
-                        return shh + ":" + smm + " am";
+                        return shh + ":" + smm + " a.m.";
                 }
 
                 function selectRegistryElement(index) {
@@ -182,17 +182,25 @@
                     @{for (int i = 0; i < cookieRegistryCount; i++)
                         {
                             string ingressTimeString = new DateTime(registries[i].IngressTicks).ToShortTimeString();
-                            string egressTimeString = new DateTime(registries[i].EgressTicks).ToShortTimeString();
-                            string diferenceHours = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Hours < 10 ?
-                                $"0{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Hours}" :
-                                $"{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Hours}";
-                            string diferenceMinutes = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes < 10 ?
-                                $"0{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes}" :
-                                $"{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes}";
-                            string diferenceSeconds = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Seconds < 10 ?
-                                $"0{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Seconds}" :
-                                $"{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Seconds}";
+                            string egressTimeString = "--:--";
+                            string diferenceHours = "--";
+                            string diferenceMinutes = "--";
+                            string diferenceSeconds = "--";
 
+                            if (registries[i].EgressTicks != 0)
+                            {
+                                egressTimeString = new DateTime(registries[i].EgressTicks).ToShortTimeString();
+                                diferenceHours = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Hours < 10 ?
+                                    $"0{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Hours}" :
+                                    $"{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Hours}";
+                                diferenceMinutes = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes < 10 ?
+                                    $"0{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes}" :
+                                    $"{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes}";
+                                diferenceSeconds = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Seconds < 10 ?
+                                    $"0{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Seconds}" :
+                                    $"{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Seconds}";
+
+                            }
                             <tr onclick="selectRegistryElement(@i)">
                                 <th scope="row">@registries[i].Employe.EmployeId</th>
                                 <td>@registries[i].Employe.Name</td>
