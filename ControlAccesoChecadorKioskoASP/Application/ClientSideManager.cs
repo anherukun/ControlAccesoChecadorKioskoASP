@@ -8,15 +8,15 @@ namespace ControlAccesoChecadorKioskoASP.Application
 {
     public class ClientSideManager
     {
-        public static object RetriveCookieFromCollection(HttpCookieCollection collection, string cookieContainter, string cookie)
+        public static string RetriveCookieFromCollection(HttpCookieCollection collection, string cookieName)
         {
-            object result = new object();
+            string result = null;
 
             if (collection.Count != 0)
             {
-                for (int i = 0; i < collection.Get(cookieContainter).Values.Count; i++)
-                    if (collection.Get(cookieContainter).Values.GetKey(i) == cookie)
-                        result = collection.Get(cookieContainter).Values.Get(i);
+                for (int i = 0; i < collection.Count; i++)
+                    if (collection[i].Name == cookieName)
+                        return collection[i].Value;
             }
 
             return result;

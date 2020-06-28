@@ -2,13 +2,13 @@
 @{
     ViewBag.Title = "Configuraciones";
     Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-@{
-    // HttpCookie clientCookies = new HttpCookie("ControlAccessCheckerCookies");
-    // clientCookies["prueba 1"] = "cookie del cliente";
-    // clientCookies.Expires = DateTime.Now.AddYears(1);
-    // Response.Cookies.Add(clientCookies);
+    
+    int cookieDepartment = ControlAccesoChecadorKioskoASP.Application.ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected") != null ?
+        int.Parse(ControlAccesoChecadorKioskoASP.Application.ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected")) : 0;
+    int cookieRegistryCount = ControlAccesoChecadorKioskoASP.Application.ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-registry-count") != null ?
+        int.Parse(ControlAccesoChecadorKioskoASP.Application.ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-registry-count")) : 20;
+    int cookieMinutesRefresh = ControlAccesoChecadorKioskoASP.Application.ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-minutes-refresh") != null ?
+        int.Parse(ControlAccesoChecadorKioskoASP.Application.ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-minutes-refresh")) : 5;
 }
 
 <div class="row" style="margin-top: 16px">
@@ -53,7 +53,15 @@
                     var regCount = document.forms["form"]["reg-count"];
                     var minCount = document.forms["form"]["update-time"];
 
+
                     return Number(select.value) > -1 && Number(regCount.value) > 0 && Number(minCount.value) > 0;
+                }
+
+                function setCookie(cookieName, cookieValue, exyears) {
+                    var d = new Date();
+                    d.setTime(d.getTime() + ((exyears * 365) * 24 * 60 * 60 * 1000));
+                    var expires = "expires=" + d.toUTCString();
+                    document.cookie = cookieName + "=" + cookieValue + ";" + expires + ";path=/";
                 }
 
                 function saveToConfig() {
@@ -65,8 +73,14 @@
 
                     if (isFormValid()) {
                         document.getElementById("success-alert-snack").style.display = "block";
+                        setCookie("client-department-selected", Number(select.value), 5);
+                        setCookie("client-registry-count", Number(regCount.value), 5);
+                        setCookie("client-minutes-refresh", Number(minCount.value), 5);
+
+                        setTimeout(() => { document.getElementById("success-alert-snack").style.display = "none"; }, 5000);
                     } else {
                         document.getElementById("error-alert-snack").style.display = "block";
+                        setTimeout(() => { document.getElementById("error-alert-snack").style.display = "none"; }, 5000);
                     }
                 }
             </script>
@@ -75,14 +89,30 @@
                 <div class="form-group">
                     <label class="col-md-4 control-label">Departamento</label>
                     <div class="input-group col-md-5">
+                        @{
+                            List<ControlAccesoChecadorKioskoASP.Models.Department> departments = ViewData["Departments"] as List<ControlAccesoChecadorKioskoASP.Models.Department>;
+
+                            int departmentSelectIndex = 0;
+                            if (cookieDepartment != 0)
+                            {
+                                for (departmentSelectIndex = 0; departmentSelectIndex < departments.Count; departmentSelectIndex++)
+                                {
+                                    if (departments[departmentSelectIndex].DepartmentId == cookieDepartment)
+                                    {
+                                        departmentSelectIndex += 1;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                         <select class="form-control" id="departmentSelect">
+
                             @{
                                 <option value="-1">Selecciona el departamento...</option>
 
-                                List<ControlAccesoChecadorKioskoASP.Models.Department> departments = ViewData["Departments"] as List<ControlAccesoChecadorKioskoASP.Models.Department>;
                                 for (int i = 0; i < departments.Count; i++)
                                 {
-                                    <option value="@i">@departments[i].DepartmentId  @departments[i].Name</option>
+                                    <option value="@departments[i].DepartmentId">@departments[i].DepartmentId  @departments[i].Name</option>
                                 }
                             }
                         </select>
@@ -119,6 +149,17 @@
                     </div>
                 </div>
             </form>
+
+
+            <script type="text/javascript">
+                            function fillWithCookies() {
+                                document.getElementById("departmentSelect").selectedIndex = @departmentSelectIndex;
+                                document.getElementById("reg-count").value = "@cookieRegistryCount";
+                                document.getElementById("update-time").value= "@cookieMinutesRefresh";
+                            }
+
+                            fillWithCookies();
+            </script>
         </div>
 
         <div class="row" style="margin-top: 32px; padding-right: 16px; text-align:right">

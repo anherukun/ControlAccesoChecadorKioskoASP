@@ -1,4 +1,5 @@
-﻿using ControlAccesoChecadorKioskoASP.Models;
+﻿using ControlAccesoChecadorKioskoASP.Application;
+using ControlAccesoChecadorKioskoASP.Models;
 using ControlAccesoChecadorKioskoASP.Services;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,7 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
     {
         public ActionResult Index()
         {
-            // List<Employe> Trabajadores = new List<Employe>();
-            // Trabajadores.Add(new Employe(582509, "Angel Gerardo Jimenez Reyes"));
-            // Trabajadores.Add(new Employe(229064, "Samuel Garcia Torres"));
-            // Trabajadores.Add(new Employe(336035, "Erika Beatriz Cruz Silva"));
-            // 
+            ViewData["Cookie-test1"] = ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected");
             ViewData["Employes"] = new EmployeRepsitory().RetriveAll();
 
             return View();

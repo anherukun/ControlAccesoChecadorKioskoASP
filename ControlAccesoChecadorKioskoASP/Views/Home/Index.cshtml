@@ -13,7 +13,8 @@
     var selectedEmploye = null;
     var employesList = @Html.Raw(Json.Encode(ViewData["Employes"]));
     var validEmploye = false;
-            //console.log(stringArray);
+
+    alert(@ViewData["Cookie-test1"]);
 </script>
 
 <div class="row" style="margin-top: 32px">
@@ -25,6 +26,7 @@
             <script type="text/javascript">
                 function validateIDEmploye() {
                     var input = document.forms["form"]["idEmploye"]
+
                     if (Number(input.value) < 0) {
                         input.value = 0;
                     }
@@ -35,12 +37,7 @@
                             document.getElementById("employeName").innerHTML = selectedEmploye.Name;
                             validEmploye = true;
                         }
-                        // for (var i = 0; i < employesList.length; i++) {
-                        //     if (employesList[i].EmployeID == Number(input.value)) {
-                        //         document.getElementById("employeName").innerHTML = employesList[i].Name;
-                        //         validEmploye = true;
-                        //     }
-                        // }
+
                     } else {
                         selectedEmploye = null;
                         validEmploye = false;
@@ -75,7 +72,7 @@
                     placeholder = "Ingresa tu ficha Ej. (582509)",
                     type = "number",
                     oninput = "validateIDEmploye()",
-           style = "font-size: 12pt;"
+                    style = "font-size: 12pt;"
                 })
                 <h4 style="margin-bottom:8px; margin-top:16px;"><b>Trabajador:</b></h4>
                 <h5 id="employeName" style="margin-bottom:8px;"></h5>
@@ -83,10 +80,6 @@
 
         </form>
 
-        @{
-            string cookie1 = string.Empty;
-            cookie1 = ControlAccesoChecadorKioskoASP.Application.ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "clientCookie", "prueba 1") as string;
-        }
         <div class="row" style="margin-top: 32px; padding-left: 16px;">
             <a class="btn btn-danger" onclick="clearForm()">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
