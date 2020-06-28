@@ -15,5 +15,13 @@ namespace ControlAccesoChecadorKioskoASP.Services
                 return db.Departments.ToList();
             }
         }
+
+        public Department GetDepartment(int deparmentId)
+        {
+            using (var db = new ControlAccessCheckerContext())
+            {
+                return db.Departments.Find(deparmentId);
+            }
+        }
     }
 }

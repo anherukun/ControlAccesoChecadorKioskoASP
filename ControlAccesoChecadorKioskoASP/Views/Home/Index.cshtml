@@ -3,18 +3,22 @@
 }
 
 @{
-    // HttpCookie clientCookies = new HttpCookie("clientCookie");
-    // clientCookies["prueba 1"] = "cookie del cliente";
-    // clientCookies.Expires = DateTime.Now.AddYears(1);
-    // Response.Cookies.Add(clientCookies);
+    int cookieDepartment = ControlAccesoChecadorKioskoASP.Application.ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected") != null ?
+        int.Parse(ControlAccesoChecadorKioskoASP.Application.ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected")) : 0;
+    int cookieRegistryCount = ControlAccesoChecadorKioskoASP.Application.ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-registry-count") != null ?
+        int.Parse(ControlAccesoChecadorKioskoASP.Application.ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-registry-count")) : 0;
+    int cookieMinutesRefresh = ControlAccesoChecadorKioskoASP.Application.ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-minutes-refresh") != null ?
+        int.Parse(ControlAccesoChecadorKioskoASP.Application.ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-minutes-refresh")) : 0;
+
+    List<ControlAccesoChecadorKioskoASP.Models.AccessRegistry> registries = Html.ViewData["AccessRegistries"] as List<ControlAccesoChecadorKioskoASP.Models.AccessRegistry>;
 }
 
 <script>
     var selectedEmploye = null;
     var employesList = @Html.Raw(Json.Encode(ViewData["Employes"]));
+    var accessRegistries = @Html.Raw(Json.Encode(ViewData["AccessRegistries"]));
     var validEmploye = false;
 
-    alert(@ViewData["Cookie-test1"]);
 </script>
 
 <div class="row" style="margin-top: 32px">
@@ -66,13 +70,12 @@
             @using (Html.BeginForm("Index", "Home", FormMethod.Post))
             {
                 <h4 style="margin-bottom:8px;"><b>Ficha:</b> </h4>
-                @Html.TextBox("idEmploye", null, new
-                {
-                    @class = "form-control",
-                    placeholder = "Ingresa tu ficha Ej. (582509)",
-                    type = "number",
-                    oninput = "validateIDEmploye()",
-                    style = "font-size: 12pt;"
+                @Html.TextBox("idEmploye", null, new { 
+                     @class = "form-control",
+                     placeholder = "Ingresa tu ficha Ej. (582509)",
+                     type = "number",
+                     oninput = "validateIDEmploye()",
+                     style = "font-size: 12pt;"
                 })
                 <h4 style="margin-bottom:8px; margin-top:16px;"><b>Trabajador:</b></h4>
                 <h5 id="employeName" style="margin-bottom:8px;"></h5>
@@ -96,10 +99,72 @@
             <h2>23 Jun 12:59:00</h2>
         </div>
 
+        <div style="background-color:#eeeeee; padding: 32px;">
+            <div class="row">
+                <div class="col-md-3">
+                    <p><a class="btn btn-success"><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>  Registrar salida</a></p>
+                </div>
+
+                <div class="col-md-9">
+                    <h5>*Para anotar tu salida selecciona tu registro, y pulsa el boton</h5>
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <div style="background-color:#eeeeee; padding: 32px">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4><b>Trabajador: </b></h4>
+                    <h5 id="selectedRegistryEmployName">ANGEL GERARDO JIMENEZ REYES</h5>
+                </div>
+                <div class="col-md-6">
+                    <h4><b>Hora de entrada: </b></h4>
+                    <h5 id="selectedRegistryIngress">08:00 am</h5>
+                </div>
+            </div>
+        </div>
+
         <div>
             <script type="text/javascript">
+                function convertInJs(ticks) {
+                    var epochTicks = 621355968000000000,    // the number of .net ticks at the unix epoch
+                        ticksPerMillisecond = 10000,        // there are 10000 .net ticks per millisecond
+                        jsTicks = 0,                        // ticks in javascript environment
+                        jsDate                              // Date in javascript environment
+
+                    jsTicks = (ticks - epochTicks) / ticksPerMillisecond;
+
+                    jsDate = new Date(jsTicks); // N.B. Js applies local timezone in automatic
+
+                    var hh = jsDate.getHours() + 5;
+                    var mm = jsDate.getMinutes();
+
+                    var shh = "";
+                    var smm = "";
+
+                    if (hh - 12 > 9)
+                        shh = (hh - 12);
+                    else
+                        shh = "0" + (hh - 12);
+
+                    if (mm > 9)
+                        smm = (mm);
+                    else
+                        smm = "0" + (mm);
+
+                    if (hh > 12)
+                        return shh + ":" + smm + " pm";
+                    else
+                        return shh + ":" + smm + " am";
+                }
+
                 function selectRegistryElement(index) {
-                    alert("TableElement= " + index)
+                    var selectedRegistryEmployeName = document.getElementById("selectedRegistryEmployName");
+                    var selectedRegistryIngress = document.getElementById("selectedRegistryIngress")
+
+                    selectedRegistryEmployeName.innerHTML = accessRegistries[index].Employe.Name;
+                    selectedRegistryIngress.innerHTML = convertInJs(accessRegistries[index].IngressTicks);
                 }
             </script>
             <table class="table table-striped table-hover">
@@ -114,54 +179,32 @@
                     </tr>
                 </thead>
                 <tbody style="cursor:pointer">
-                    @{for (int i = 0; i < 4; i++)
+                    @{for (int i = 0; i < cookieRegistryCount; i++)
                         {
+                            string ingressTimeString = new DateTime(registries[i].IngressTicks).ToShortTimeString();
+                            string egressTimeString = new DateTime(registries[i].EgressTicks).ToShortTimeString();
+                            string diferenceHours = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Hours < 10 ?
+                                $"0{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Hours}" :
+                                $"{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Hours}";
+                            string diferenceMinutes = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes < 10 ?
+                                $"0{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes}" :
+                                $"{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes}";
+                            string diferenceSeconds = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Seconds < 10 ?
+                                $"0{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Seconds}" :
+                                $"{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Seconds}";
+
                             <tr onclick="selectRegistryElement(@i)">
-                                <th scope="row">582509</th>
-                                <td>ANGEL GERARDO JIMENEZ REYES</td>
-                                <td>24/06/2020</td>
-                                <td>8:00 am</td>
-                                <td>8:00 pm</td>
-                                <td>12:00 hrs</td>
+                                <th scope="row">@registries[i].Employe.EmployeId</th>
+                                <td>@registries[i].Employe.Name</td>
+                                <td>@registries[i].Date.ToShortDateString()</td>
+                                <td>@ingressTimeString</td>
+                                <td>@egressTimeString</td>
+                                <td>@diferenceHours:@diferenceMinutes:@diferenceSeconds</td>
                             </tr>
                         }
                     }
-                    <tr onclick="selectRegistryElement(4)">
-                        <th scope="row">582509</th>
-                        <td>ANGEL GERARDO JIMENEZ REYES</td>
-                        <td>24/06/2020</td>
-                        <td>8:00 am</td>
-                        <td>8:00 pm</td>
-                        <td>12:00 hrs</td>
-                    </tr>
                 </tbody>
             </table>
-        </div>
-
-        <div style="background-color:#eeeeee; padding: 32px">
-            <div class="row">
-                <div class="col-md-6">
-                    <h4><b>Trabajador: </b></h4>
-                    <h5>ANGEL GERARDO JIMENEZ REYES</h5>
-                </div>
-                <div class="col-md-6">
-                    <h4><b>Hora de entrada: </b></h4>
-                    <h5>08:00 am</h5>
-                </div>
-            </div>
-        </div>
-        <br />
-
-        <div style="background-color:#eeeeee; padding: 32px;">
-            <div class="row">
-                <div class="col-md-3">
-                    <p><a class="btn btn-success"><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>  Registrar salida</a></p>
-                </div>
-
-                <div class="col-md-9">
-                    <h5>*Para anotar tu salida selecciona tu registro, y pulsa el boton</h5>
-                </div>
-            </div>
         </div>
     </div>
 </div>
