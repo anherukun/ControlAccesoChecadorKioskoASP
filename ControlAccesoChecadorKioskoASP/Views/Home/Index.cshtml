@@ -19,6 +19,51 @@
     var accessRegistries = @Html.Raw(Json.Encode(ViewData["AccessRegistries"]));
     var validEmploye = false;
 
+    function clockStart() {
+        var today = new Date();
+        var d = checkTime(today.getDate()) + " " + checkMonth(today.getMonth());
+        var h = today.getHours();
+        var m = today.getMinutes();
+        var s = today.getSeconds();
+        m = checkTime(m);
+        s = checkTime(s);
+        document.getElementById('clock').innerHTML =
+            d + " [" + h + ":" + m + ":" + s + "]";
+        setTimeout(clockStart, 1000);
+    }
+    function checkTime(i) {
+        if (i < 10) { i = "0" + i };  // add zero in front of numbers < 10
+        return i;
+    }
+    function checkMonth(i) {
+        switch (i) {
+            case 0:
+                return "ENE";
+            case 1:
+                return "FEB";
+            case 2:
+                return "MAR";
+            case 3:
+                return "ABR";
+            case 4:
+                return "MAY";
+            case 5:
+                return "JUN";
+            case 6:
+                return "JUL";
+            case 7:
+                return "AGO";
+            case 8:
+                return "SEP";
+            case 9:
+                return "OCT";
+            case 10:
+                return "NOV";
+            case 11:
+                return "DIC";
+            default:
+        }
+    }
 </script>
 
 <div class="row" style="margin-top: 32px">
@@ -96,7 +141,8 @@
     <!--BACKLOG REGISTRY-->
     <div class="row col-sm-7 col-sm-offset-1">
         <div style="background-color:#eeeeee; padding: 32px;">
-            <h2>23 Jun 12:59:00</h2>
+            <h2 id="clock">23 Jun 12:59:00</h2>
+            <script type="text/javascript">clockStart();</script>
         </div>
 
         <div style="background-color:#eeeeee; padding: 32px;">
@@ -118,7 +164,7 @@
                     <h4><b>Trabajador: </b></h4>
                     <h5 id="selectedRegistryEmployName">...</h5>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6" style="display: none;">
                     <h4><b>Hora de entrada: </b></h4>
                     <h5 id="selectedRegistryIngress">--:--</h5>
                 </div>
@@ -137,7 +183,7 @@
 
                     jsDate = new Date(jsTicks); // N.B. Js applies local timezone in automatic
 
-                    var hh = jsDate.getHours() + 5;
+                    var hh = jsDate.getHours();
                     var mm = jsDate.getMinutes();
 
                     var shh = "";
@@ -185,7 +231,6 @@
                             string egressTimeString = "--:--";
                             string diferenceHours = "--";
                             string diferenceMinutes = "--";
-                            string diferenceSeconds = "--";
 
                             if (registries[i].EgressTicks != 0)
                             {
@@ -196,10 +241,6 @@
                                 diferenceMinutes = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes < 10 ?
                                     $"0{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes}" :
                                     $"{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes}";
-                                diferenceSeconds = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Seconds < 10 ?
-                                    $"0{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Seconds}" :
-                                    $"{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Seconds}";
-
                             }
                             <tr onclick="selectRegistryElement(@i)">
                                 <th scope="row">@registries[i].Employe.EmployeId</th>
@@ -207,7 +248,7 @@
                                 <td>@registries[i].Date.ToShortDateString()</td>
                                 <td>@ingressTimeString</td>
                                 <td>@egressTimeString</td>
-                                <td>@diferenceHours:@diferenceMinutes:@diferenceSeconds</td>
+                                <td>@diferenceHours:@diferenceMinutes</td>
                             </tr>
                         }
                     }

@@ -14,10 +14,15 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
     {
         public ActionResult Index()
         {
-            Department department = new DepartmentRepository().GetDepartment(int.Parse(ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected")));
-            List<AccessRegistry> accessRegistries = new AccessRegistryRepository().RetriveByDepartment(int.Parse(ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected")));
+            Department department = ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected") != null ?
+                new DepartmentRepository().GetDepartment(int.Parse(ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected"))) :
+                null;
+            List<AccessRegistry> accessRegistries = ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected") != null ? 
+                new AccessRegistryRepository().RetriveByDepartment(int.Parse(ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected"))) :
+                null;
             List<Employe> employes = new EmployeRepsitory().RetriveAll();
 
+            
             ViewData["Department"] = department;
             ViewData["Employes"] = employes;
             ViewData["AccessRegistries"] = accessRegistries;
