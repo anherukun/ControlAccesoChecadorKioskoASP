@@ -29,6 +29,29 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
 
             return View();
         }
+        [HttpPost]
+        public ActionResult Index(string idEmploye)
+        {
+            Department department = ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected") != null ? 
+                new DepartmentRepository().GetDepartment(int.Parse(ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected"))) :
+                null;
+            
+            if (department != null)
+            {
+                Employe employe = new EmployeRepsitory().GetEmploye(int.Parse(idEmploye));
+
+                AccessRegistry registry = new AccessRegistry();
+                registry.Employe = employe;
+                registry.Date = DateTime.Now;
+                registry.Department = department;
+                registry.IngressTicks = DateTime.Now.Ticks;
+                registry.EgressTicks = 0;
+
+                new AccessRegistryRepository().Add(registry);
+            }
+
+            return Redirect("/");
+        }
 
         public ActionResult About()
         {

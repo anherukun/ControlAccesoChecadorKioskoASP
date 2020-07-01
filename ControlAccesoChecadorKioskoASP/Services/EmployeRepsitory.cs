@@ -15,5 +15,13 @@ namespace ControlAccesoChecadorKioskoASP.Services
                 return db.Employes.ToList();
             }
         }
+
+        public Employe GetEmploye(int employeId)
+        {
+            using (var db = new ControlAccessCheckerContext())
+            {
+                return db.Employes.Find(employeId);
+            }
+        }
     }
 }

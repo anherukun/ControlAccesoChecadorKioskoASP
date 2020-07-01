@@ -12,10 +12,15 @@ namespace ControlAccesoChecadorKioskoASP.Models
 {
     public class AccessRegistry
     {
+        [Key]
         public int AccessRegistryId { get; set; }
         [Required]
+        public int EmployeId { get; set; }
+        [ForeignKey("EmployeId")]
         public Employe Employe { get; set; }
         [Required]
+        public int DepartmentId { get; set; }
+        [ForeignKey("DepartmentId")]
         public Department Department { get; set; }
         [Required]
         public DateTime Date { get; set; }

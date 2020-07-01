@@ -9,6 +9,7 @@ namespace ControlAccesoChecadorKioskoASP.Models
 {
     public class Employe
     {
+        [Key]
         public int EmployeId { get; set; }
         [Required]
         [StringLength(100)]

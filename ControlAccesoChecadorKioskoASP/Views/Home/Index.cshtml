@@ -71,71 +71,72 @@
     <div class="col-sm-4" style="padding: 32px 32px 32px 32px; background-color:#eeeeee; box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.40);">
         <h2>Departamento</h2>
 
-        <form id="form" action="~/Views/Home/Index" method="post" onsubmit="validateForm()">
-            <script type="text/javascript">
-                function validateIDEmploye() {
-                    var input = document.forms["form"]["idEmploye"]
+        <script type="text/javascript">
+            function validateIDEmploye() {
+                var input = document.forms["form"]["idEmploye"]
 
-                    if (Number(input.value) < 0) {
-                        input.value = 0;
-                    }
-                    if (input.value.length == 6) {
-                        selectedEmploye = employesList.find(x => x.EmployeId === Number(input.value));
-
-                        if (selectedEmploye != null) {
-                            document.getElementById("employeName").innerHTML = selectedEmploye.Name;
-                            validEmploye = true;
-                        }
-
-                    } else {
-                        selectedEmploye = null;
-                        validEmploye = false;
-                        document.getElementById("employeName").innerHTML = "";
-                    }
+                if (Number(input.value) < 0) {
+                    input.value = 0;
                 }
+                if (input.value.length == 6) {
+                    selectedEmploye = employesList.find(x => x.EmployeId === Number(input.value));
 
-                function validateForm() {
-                    var input = document.forms["form"]["idEmploye"]
-                    if (input.value > 0 && validEmploye) {
-                        alert("EmployeID= " + selectedEmploye.EmployeId + " Employe Name= " + selectedEmploye.Name);
-                        return false;
-                    } else {
-                        alert("Debes de ingresar una ficha de trabajador valido");
+                    if (selectedEmploye != null) {
+                        document.getElementById("employeName").innerHTML = selectedEmploye.Name;
+                        validEmploye = true;
                     }
-                }
 
-                function clearForm() {
+                } else {
                     selectedEmploye = null;
                     validEmploye = false;
-                    document.forms["form"]["idEmploye"].value = "";
                     document.getElementById("employeName").innerHTML = "";
                 }
-            </script>
-
-            @using (Html.BeginForm("Index", "Home", FormMethod.Post))
-            {
-                <h4 style="margin-bottom:8px;"><b>Ficha:</b> </h4>
-                @Html.TextBox("idEmploye", null, new { 
-                     @class = "form-control",
-                     placeholder = "Ingresa tu ficha Ej. (582509)",
-                     type = "number",
-                     oninput = "validateIDEmploye()",
-                     style = "font-size: 12pt;"
-                })
-                <h4 style="margin-bottom:8px; margin-top:16px;"><b>Trabajador:</b></h4>
-                <h5 id="employeName" style="margin-bottom:8px;"></h5>
             }
 
-        </form>
+            function validateForm() {
+                var input = document.forms["form"]["idEmploye"]
+                if (input.value > 0 && validEmploye) {
+                    alert("EmployeID= " + selectedEmploye.EmployeId + " Employe Name= " + selectedEmploye.Name);
+                    return true;
+                } else {
+                    alert("Debes de ingresar una ficha de trabajador valido");
+                    return false;
+                }
+            }
 
-        <div class="row" style="margin-top: 32px; padding-left: 16px;">
-            <a class="btn btn-danger" onclick="clearForm()">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-            </a>
-            <a class="btn btn-primary" onclick="validateForm()">
-                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>  Registrar Entrada
-            </a>
-        </div>
+            function clearForm() {
+                selectedEmploye = null;
+                validEmploye = false;
+                document.forms["form"]["idEmploye"].value = "";
+                document.getElementById("employeName").innerHTML = "";
+            }
+        </script>
+
+        @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { onsubmit = "return validateForm()", id = "form" }))
+        {
+            <h4 style="margin-bottom:8px;"><b>Ficha:</b> </h4>
+            @Html.TextBox("idEmploye", null, new
+            {
+                 @class = "form-control",
+                 placeholder = "Ingresa tu ficha Ej. (582509)",
+                 type = "number",
+                 oninput = "validateIDEmploye()",
+                 style = "font-size: 12pt;"
+            })
+            <h4 style="margin-bottom:8px; margin-top:16px;"><b>Trabajador:</b></h4>
+            <h5 id="employeName" style="margin-bottom:8px;"></h5>
+
+            <div class="row" style="margin-top: 32px; padding-left: 16px;">
+                <a class="btn btn-danger" onclick="clearForm()">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>  Registrar Entrada
+                </button>
+            </div>
+        }
+
+
     </div>
 
     <!--BACKLOG REGISTRY-->
