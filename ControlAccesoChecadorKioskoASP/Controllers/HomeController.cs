@@ -41,9 +41,9 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
                 Employe employe = new EmployeRepsitory().GetEmploye(int.Parse(idEmploye));
 
                 AccessRegistry registry = new AccessRegistry();
-                registry.Employe = employe;
+                registry.EmployeId = employe.EmployeId;
                 registry.Date = DateTime.Now;
-                registry.Department = department;
+                registry.DepartmentId = department.DepartmentId;
                 registry.IngressTicks = DateTime.Now.Ticks;
                 registry.EgressTicks = 0;
 
