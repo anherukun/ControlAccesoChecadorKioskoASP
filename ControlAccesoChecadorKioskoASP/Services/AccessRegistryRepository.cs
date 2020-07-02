@@ -10,13 +10,13 @@ namespace ControlAccesoChecadorKioskoASP.Services
 {
     public class AccessRegistryRepository
     {
-        public List<AccessRegistry> RetriveByDepartment(int departmentId)
+        public List<AccessRegistry> RetriveByDepartment(int departmentId, int count)
         {
             using (var db = new ControlAccessCheckerContext())
             {
                 return db.AccessRegistries.Where(x => x.Department.DepartmentId == departmentId)
                     .Include(x => x.Department)
-                    .Include(x => x.Employe).OrderByDescending(x => x.AccessRegistryId).ToList() ;
+                    .Include(x => x.Employe).OrderByDescending(x => x.AccessRegistryId).Take(count).ToList();
             }
         }
 

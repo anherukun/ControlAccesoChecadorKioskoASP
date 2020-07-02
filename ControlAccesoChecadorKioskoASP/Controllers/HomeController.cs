@@ -1,4 +1,5 @@
-﻿using ControlAccesoChecadorKioskoASP.Application;
+﻿using Antlr.Runtime.Misc;
+using ControlAccesoChecadorKioskoASP.Application;
 using ControlAccesoChecadorKioskoASP.Models;
 using ControlAccesoChecadorKioskoASP.Services;
 using System;
@@ -14,11 +15,12 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
     {
         public ActionResult Index()
         {
+            int registryLimit = ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-registry-count") != null ?
+                int.Parse(ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-registry-count")) : 0;
             Department department = ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected") != null ?
                 new DepartmentRepository().GetDepartment(int.Parse(ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected"))) :
                 null;
-            List<AccessRegistry> accessRegistries = ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected") != null ? 
-                new AccessRegistryRepository().RetriveByDepartment(int.Parse(ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected"))) :
+            List<AccessRegistry> accessRegistries = department != null ? new AccessRegistryRepository().RetriveByDepartment(department.DepartmentId, registryLimit) :
                 null;
             List<Employe> employes = new EmployeRepsitory().RetriveAll();
 

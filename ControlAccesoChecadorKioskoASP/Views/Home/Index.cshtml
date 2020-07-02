@@ -15,6 +15,7 @@
 
 <script>
     var selectedEmploye = null;
+    var selectedRegistry = null;
     var employesList = @Html.Raw(Json.Encode(ViewData["Employes"]));
     var accessRegistries = @Html.Raw(Json.Encode(ViewData["AccessRegistries"]));
     var department = @Html.Raw(Json.Encode(ViewData["Department"]));
@@ -177,9 +178,19 @@
         </div>
 
         <div style="background-color:#eeeeee; padding: 32px;">
+            <script type="text/javascript">
+                function requestEgress() {
+                    var data = { accessRegistryId: selectedRegistry };
+                    //fetch("/", data);
+
+                    $.post("@Url.Action("Index", "Home")", data, function (data, status) {
+                        console.log(`${data} ... ${status}`)
+                    });
+                }
+            </script>
             <div class="row">
                 <div class="col-md-3">
-                    <p><a class="btn btn-success"><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>  Registrar salida</a></p>
+                    <p><a class="btn btn-success" onclick="requestEgress()"><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>  Registrar salida</a></p>
                 </div>
 
                 <div class="col-md-9">
@@ -212,6 +223,8 @@
 
                     selectedRegistryEmployeName.innerHTML = accessRegistries[index].Employe.Name;
                     selectedRegistryIngress.innerHTML = celldate.innerHTML + " @@ " + cellingresstime.innerHTML;
+
+                    selectedRegistry = accessRegistries[index];
                 }
             </script>
             <table class="table table-striped table-hover">
