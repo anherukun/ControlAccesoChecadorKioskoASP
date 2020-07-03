@@ -32,7 +32,7 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult Index(string idEmploye)
+        public ActionResult SubmitIngress(int idEmploye)
         {
             Department department = ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected") != null ? 
                 new DepartmentRepository().GetDepartment(int.Parse(ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected"))) :
@@ -40,17 +40,25 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
             
             if (department != null)
             {
-                Employe employe = new EmployeRepsitory().GetEmploye(int.Parse(idEmploye));
-
                 AccessRegistry registry = new AccessRegistry();
-                registry.EmployeId = employe.EmployeId;
+                registry.EmployeId = idEmploye;
                 registry.Date = DateTime.Now;
                 registry.DepartmentId = department.DepartmentId;
                 registry.IngressTicks = DateTime.Now.Ticks;
                 registry.EgressTicks = 0;
-
+                
                 new AccessRegistryRepository().Add(registry);
             }
+
+            return Redirect("/");
+        }
+        [HttpPost]
+        public ActionResult SubmitEgress(int idAccessRegistry)
+        {
+            AccessRegistry registry = new AccessRegistryRepository().GetRegistry(idAccessRegistry);
+            registry.EgressTicks = DateTime.Now.Ticks;
+
+            new AccessRegistryRepository().Update(registry);
 
             return Redirect("/");
         }

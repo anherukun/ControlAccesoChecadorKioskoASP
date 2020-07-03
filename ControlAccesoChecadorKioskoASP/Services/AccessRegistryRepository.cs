@@ -3,6 +3,7 @@ using Microsoft.Ajax.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web;
 
@@ -26,6 +27,23 @@ namespace ControlAccesoChecadorKioskoASP.Services
             {
                 db.AccessRegistries.Add(registry);
                 db.SaveChanges();
+            }
+        }
+
+        public void Update(AccessRegistry registry)
+        {
+            using (var db = new ControlAccessCheckerContext())
+            {
+                db.AccessRegistries.AddOrUpdate(registry);
+                db.SaveChanges();
+            }
+        }
+
+        public AccessRegistry GetRegistry(int accessRegistryId)
+        {
+            using (var db = new ControlAccessCheckerContext())
+            {
+                return db.AccessRegistries.Find(accessRegistryId);
             }
         }
     }

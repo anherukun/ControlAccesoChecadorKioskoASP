@@ -73,13 +73,15 @@
         }
     }
     function showErrorMessage(time, message) {
+        document.getElementById("error-alert-snack").style.display = "block";
+        document.getElementById("error-alert-snack").innerHTML = message;
         if (time == null) {
-            document.getElementById("success-alert-snack").style.display = "none";
-            document.getElementById("success-alert-snack").innerText = message;
+            document.getElementById("error-alert-snack").style.display = "none";
+            document.getElementById("error-alert-snack").innerHTML = message;
         } else {
             setTimeout(() => {
-                document.getElementById("success-alert-snack").style.display = "none";
-                document.getElementById("success-alert-snack").innerText = message;
+                document.getElementById("error-alert-snack").style.display = "none";
+                document.getElementById("error-alert-snack").innerHTML = message;
             }, time * 1000);
         }
     }
@@ -104,7 +106,7 @@
 
         <script type="text/javascript">
             function validateIDEmploye() {
-                var input = document.forms["form"]["idEmploye"]
+                var input = document.forms["form-ingress"]["idEmploye"]
 
                 if (Number(input.value) < 0) {
                     input.value = 0;
@@ -125,7 +127,7 @@
             }
 
             function validateForm() {
-                var input = document.forms["form"]["idEmploye"]
+                var input = document.forms["form-ingress"]["idEmploye"]
                 if (input.value > 0 && validEmploye) {
                     alert("EmployeID= " + selectedEmploye.EmployeId + " Employe Name= " + selectedEmploye.Name);
                     return true;
@@ -138,12 +140,12 @@
             function clearForm() {
                 selectedEmploye = null;
                 validEmploye = false;
-                document.forms["form"]["idEmploye"].value = "";
+                document.forms["form-ingress"]["idEmploye"].value = "";
                 document.getElementById("employeName").innerHTML = "";
             }
         </script>
 
-        @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { onsubmit = "return validateForm()", id = "form" }))
+        @using (Html.BeginForm("SubmitIngress", "Home", FormMethod.Post, new { onsubmit = "return validateForm()", id = "form-ingress" }))
         {
             <h4 style="margin-bottom:8px;"><b>Ficha:</b> </h4>
             @Html.TextBox("idEmploye", null, new
@@ -180,12 +182,16 @@
         <div style="background-color:#eeeeee; padding: 32px;">
             <script type="text/javascript">
                 function requestEgress() {
-                    var data = { accessRegistryId: selectedRegistry };
-                    //fetch("/", data);
-
-                    $.post("@Url.Action("Index", "Home")", data, function (data, status) {
-                        console.log(`${data} ... ${status}`)
-                    });
+                    var submitEgressForm = document.forms["form-egress"];
+                    if (selectedRegistry != null && submitEgressForm["idAccessRegistry"].value != null) {
+                        if (selectedRegistry.EgressTicks == 0) {
+                            submitEgressForm.submit();
+                        } else {
+                            showErrorMessage(8, "Este trabajador ya registro su salida");
+                        }
+                    } else {
+                        showErrorMessage(8, "Debes seleccionar un elemento de la lista");
+                    }
                 }
             </script>
             <div class="row">
@@ -201,6 +207,14 @@
         <br />
 
         <div style="background-color:#eeeeee; padding: 32px">
+            @using (Html.BeginForm("SubmitEgress", "Home", FormMethod.Post, new { id="form-egress", style="display: none;" }))
+            {
+                @Html.TextBox("idAccessRegistry", null, new 
+                { 
+                    @class = "form-control", 
+                    type = "number"
+                })
+            }
             <div class="row">
                 <div class="col-md-6">
                     <h4><b>Trabajador: </b></h4>
@@ -220,11 +234,13 @@
                     var selectedRegistryIngress = document.getElementById("selectedRegistryIngress")
                     var cellingresstime = document.getElementById("row-ingresstime-" + index);
                     var celldate = document.getElementById("row-date-" + index);
+                    var submitEgressForm = document.forms["form-egress"];
 
                     selectedRegistryEmployeName.innerHTML = accessRegistries[index].Employe.Name;
                     selectedRegistryIngress.innerHTML = celldate.innerHTML + " @@ " + cellingresstime.innerHTML;
 
                     selectedRegistry = accessRegistries[index];
+                    submitEgressForm["idAccessRegistry"].value = selectedRegistry.AccessRegistryId;
                 }
             </script>
             <table class="table table-striped table-hover">
@@ -248,13 +264,12 @@
 
                             if (registries[i].EgressTicks != 0)
                             {
+                                int hh = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Hours
+                                    + (new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Days * 24);
+                                int mm = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes;
                                 egressTimeString = new DateTime(registries[i].EgressTicks).ToShortTimeString();
-                                diferenceHours = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Hours < 10 ?
-                                    $"0{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Hours}" :
-                                    $"{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Hours}";
-                                diferenceMinutes = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes < 10 ?
-                                    $"0{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes}" :
-                                    $"{new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes}";
+                                diferenceHours = hh < 10 ? $"0{hh}" : $"{hh}";
+                                diferenceMinutes = mm < 10 ? $"0{mm}" : $"{mm}";
                             }
                             <tr onclick="selectRegistryElement(@i)">
                                 <th scope="row">@registries[i].Employe.EmployeId</th>
