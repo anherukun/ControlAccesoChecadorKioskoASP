@@ -129,10 +129,10 @@
             function validateForm() {
                 var input = document.forms["form-ingress"]["idEmploye"]
                 if (input.value > 0 && validEmploye) {
-                    alert("EmployeID= " + selectedEmploye.EmployeId + " Employe Name= " + selectedEmploye.Name);
+                    // alert("EmployeID= " + selectedEmploye.EmployeId + " Employe Name= " + selectedEmploye.Name);
                     return true;
                 } else {
-                    alert("Debes de ingresar una ficha de trabajador valido");
+                    showErrorMessage(8, "Debes de ingresar una ficha de trabajador valido");
                     return false;
                 }
             }
