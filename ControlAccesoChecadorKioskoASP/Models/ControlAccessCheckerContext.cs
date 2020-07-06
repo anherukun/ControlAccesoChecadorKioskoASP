@@ -8,10 +8,17 @@ namespace ControlAccesoChecadorKioskoASP.Models
 {
     public class ControlAccessCheckerContext : DbContext
     {
+#if DEBUG
         public ControlAccessCheckerContext() : base("DefaultConnectionMySQL")
         {
 
         }
+#else
+        public ControlAccessCheckerContext() : base("DefaultConnectionMySQL-PROD")
+        {
+
+        }
+#endif
         static ControlAccessCheckerContext()
         {
             DbConfiguration.SetConfiguration(new MySql.Data.Entity.MySqlEFConfiguration());
