@@ -255,30 +255,33 @@
                     </tr>
                 </thead>
                 <tbody style="cursor:pointer">
-                    @{for (int i = 0; i < cookieRegistryCount; i++)
+                    @{if (registries != null && registries.Count > 0)
                         {
-                            string ingressTimeString = new DateTime(registries[i].IngressTicks).ToShortTimeString();
-                            string egressTimeString = "--:--";
-                            string diferenceHours = "--";
-                            string diferenceMinutes = "--";
-
-                            if (registries[i].EgressTicks != 0)
+                            for (int i = 0; i < registries.Count; i++)
                             {
-                                int hh = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Hours
-                                    + (new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Days * 24);
-                                int mm = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes;
-                                egressTimeString = new DateTime(registries[i].EgressTicks).ToShortTimeString();
-                                diferenceHours = hh < 10 ? $"0{hh}" : $"{hh}";
-                                diferenceMinutes = mm < 10 ? $"0{mm}" : $"{mm}";
+                                string ingressTimeString = new DateTime(registries[i].IngressTicks).ToShortTimeString();
+                                string egressTimeString = "--:--";
+                                string diferenceHours = "--";
+                                string diferenceMinutes = "--";
+
+                                if (registries[i].EgressTicks != 0)
+                                {
+                                    int hh = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Hours
+                                        + (new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Days * 24);
+                                    int mm = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes;
+                                    egressTimeString = new DateTime(registries[i].EgressTicks).ToShortTimeString();
+                                    diferenceHours = hh < 10 ? $"0{hh}" : $"{hh}";
+                                    diferenceMinutes = mm < 10 ? $"0{mm}" : $"{mm}";
+                                }
+                                <tr onclick="selectRegistryElement(@i)">
+                                    <th scope="row">@registries[i].Employe.EmployeId</th>
+                                    <td>@registries[i].Employe.Name</td>
+                                    <td id="row-date-@i">@registries[i].Date.ToShortDateString()</td>
+                                    <td id="row-ingresstime-@i">@ingressTimeString</td>
+                                    <td id="row-egresstime-@i">@egressTimeString</td>
+                                    <td id="row-diference-@i">@diferenceHours:@diferenceMinutes</td>
+                                </tr>
                             }
-                            <tr onclick="selectRegistryElement(@i)">
-                                <th scope="row">@registries[i].Employe.EmployeId</th>
-                                <td>@registries[i].Employe.Name</td>
-                                <td id="row-date-@i">@registries[i].Date.ToShortDateString()</td>
-                                <td id="row-ingresstime-@i">@ingressTimeString</td>
-                                <td id="row-egresstime-@i">@egressTimeString</td>
-                                <td id="row-diference-@i">@diferenceHours:@diferenceMinutes</td>
-                            </tr>
                         }
                     }
                 </tbody>
