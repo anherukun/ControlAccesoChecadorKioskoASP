@@ -99,11 +99,8 @@
 
     <!--FORMULARIO DE REGISTRO ACCESO-->
     <div class="col-sm-4" style="padding: 32px 32px 32px 32px; margin-top: 16px; background-color:#eeeeee; box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.40);">
-        <h3 id="departmentname">Departamento sin seleccionar</h3>
-        <script type="text/javascript">
-            updateLayout();
-        </script>
-
+        <h3 style="margin-top:0px; margin-bottom:20px;"><span class="glyphicon glyphicon-book"></span> Checador</h3>
+        
         <script type="text/javascript">
             function validateIDEmploye() {
                 var input = document.forms["form-ingress"]["idEmploye"]
@@ -174,36 +171,17 @@
 
     <!--BACKLOG REGISTRY-->
     <div class="row col-sm-7 col-sm-offset-1" style="margin-top: 16px;">
-        <div style="background-color:#eeeeee; padding: 32px;">
-            <h2 id="clock">23 Jun 12:59:00</h2>
-            <script type="text/javascript">clockStart();</script>
-        </div>
-
-        <div style="background-color:#eeeeee; padding: 32px;">
-            <script type="text/javascript">
-                function requestEgress() {
-                    var submitEgressForm = document.forms["form-egress"];
-                    if (selectedRegistry != null && submitEgressForm["idAccessRegistry"].value != null) {
-                        if (selectedRegistry.EgressTicks == 0) {
-                            submitEgressForm.submit();
-                        } else {
-                            showErrorMessage(8, "Este trabajador ya registro su salida");
-                        }
-                    } else {
-                        showErrorMessage(8, "Debes seleccionar un elemento de la lista");
-                    }
-                }
-            </script>
-            <div class="row">
-                <div class="col-md-3">
-                    <p><a class="btn btn-success" onclick="requestEgress()"><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>  Registrar salida</a></p>
-                </div>
-
-                <div class="col-md-9">
-                    <h5>*Para anotar tu salida selecciona tu registro, y pulsa el boton</h5>
-                </div>
+        <div style="background-color:#eeeeee; padding: 32px; display:grid">
+            <div>
+                <h3 class="col-md-6" id="departmentname" style="margin-top:10px;">Departamento sin seleccionar</h3>
+                <h2 class="col-md-6" id="clock" style="margin-top:10px;">23 Jun 12:59:00</h2>
+                <script type="text/javascript">
+                    updateLayout();
+                    clockStart();
+                </script>
             </div>
         </div>
+
         <br />
 
         <div style="background-color:#eeeeee; padding: 32px">
@@ -221,9 +199,30 @@
                     <h5 id="selectedRegistryEmployName">...</h5>
                 </div>
                 <div class="col-md-6">
-                    <h4><b>Fecha y Hora de entrada: </b></h4>
+                    <h4><b>Hora de entrada: </b></h4>
                     <h5 id="selectedRegistryIngress">--:--</h5>
                 </div>
+            </div>
+            <div class="row">
+                <h5 class="col-md-8" style="margin-top:18px;">*Para anotar tu salida selecciona tu registro, y pulsa el boton</h5>
+                <div class="col-md-4" style="text-align:right; display:contents;">
+                    <p style="margin-top:8px; margin-right:16px;"><a class="btn btn-success" onclick="requestEgress()"><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>  Registrar salida</a></pstyle="margin-top:8px;>
+                </div>
+
+                <script type="text/javascript">
+                    function requestEgress() {
+                        var submitEgressForm = document.forms["form-egress"];
+                        if (selectedRegistry != null && submitEgressForm["idAccessRegistry"].value != null) {
+                            if (selectedRegistry.EgressTicks == 0) {
+                                submitEgressForm.submit();
+                            } else {
+                                showErrorMessage(8, "Este trabajador ya registro su salida");
+                            }
+                        } else {
+                            showErrorMessage(8, "Debes seleccionar un elemento de la lista");
+                        }
+                    }
+                </script>
             </div>
         </div>
 
@@ -251,7 +250,6 @@
                         <th scope="col">Fecha</th>
                         <th scope="col">Entrada</th>
                         <th scope="col">Salida</th>
-                        <th scope="col">Horas</th>
                     </tr>
                 </thead>
                 <tbody style="cursor:pointer">
@@ -261,17 +259,17 @@
                             {
                                 string ingressTimeString = new DateTime(registries[i].IngressTicks).ToShortTimeString();
                                 string egressTimeString = "--:--";
-                                string diferenceHours = "--";
-                                string diferenceMinutes = "--";
+                                //string diferenceHours = "--";
+                                //string diferenceMinutes = "--";
 
                                 if (registries[i].EgressTicks != 0)
                                 {
-                                    int hh = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Hours
-                                        + (new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Days * 24);
-                                    int mm = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes;
+                                    //int hh = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Hours
+                                    //    + (new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Days * 24);
+                                    //int mm = new DateTime(registries[i].EgressTicks).Subtract(new DateTime(registries[i].IngressTicks)).Minutes;
                                     egressTimeString = new DateTime(registries[i].EgressTicks).ToShortTimeString();
-                                    diferenceHours = hh < 10 ? $"0{hh}" : $"{hh}";
-                                    diferenceMinutes = mm < 10 ? $"0{mm}" : $"{mm}";
+                                    //diferenceHours = hh < 10 ? $"0{hh}" : $"{hh}";
+                                    //diferenceMinutes = mm < 10 ? $"0{mm}" : $"{mm}";
                                 }
                                 <tr onclick="selectRegistryElement(@i)">
                                     <th scope="row">@registries[i].Employe.EmployeId</th>
@@ -279,7 +277,6 @@
                                     <td id="row-date-@i">@registries[i].Date.ToShortDateString()</td>
                                     <td id="row-ingresstime-@i">@ingressTimeString</td>
                                     <td id="row-egresstime-@i">@egressTimeString</td>
-                                    <td id="row-diference-@i">@diferenceHours:@diferenceMinutes</td>
                                 </tr>
                             }
                         }
