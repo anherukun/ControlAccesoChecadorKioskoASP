@@ -7,8 +7,30 @@
     <title>Control de acceso - @ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <script type="text/javascript">
+        function playsound(select) {
+            // 0: Error     1: Success      default: none
+            var sound = document.getElementById("audio-source");
+            switch (select) {
+                case 0:
+                    sound.src = "/App_Sounds/alarm.ogg";
+                    break;
+
+                case 1:
+                    sound.src = "/App_Sounds/MENU%20A_Select.wav";
+                    break;
+
+                default:
+                    sound.src = "";
+                    break;
+            }
+            sound.play();
+        }
+    </script>
 </head>
+
 <body>
+    <audio id="audio-source"></audio>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -30,7 +52,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Checador v2.0, Desarrollado por Angel Jimenez Reyes</p>            
+            <p>&copy; @DateTime.Now.Year - Checador v2.0, Desarrollado por Angel Jimenez Reyes</p>
         </footer>
     </div>
 

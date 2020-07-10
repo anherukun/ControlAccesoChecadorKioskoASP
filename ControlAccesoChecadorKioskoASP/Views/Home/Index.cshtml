@@ -67,27 +67,30 @@
         }
     }
 
+    function retriveMessage() {
+        var msg = @Html.Raw(Json.Encode(ViewData["message"]));
+
+        switch (msg.msgType) {
+            case "error":
+                showErrorMessage(8, msg.msgString);
+                break;
+
+            case "success":
+                showSuccessMessage(8, msg.msgString);
+                break;
+            default:
+        }
+    }
+
     function updateLayout() {
         if (department.Name != null || department.Name != "") {
             document.getElementById("departmentname").innerHTML = department.Name;
         }
     }
-    function showErrorMessage(time, message) {
-        document.getElementById("error-alert-snack").style.display = "block";
-        document.getElementById("error-alert-snack").innerHTML = message;
-        if (time == null) {
-            document.getElementById("error-alert-snack").style.display = "none";
-            document.getElementById("error-alert-snack").innerHTML = message;
-        } else {
-            setTimeout(() => {
-                document.getElementById("error-alert-snack").style.display = "none";
-                document.getElementById("error-alert-snack").innerHTML = message;
-            }, time * 1000);
-        }
-    }
 </script>
 
 <div class="row" style="margin-top: 32px">
+    <!--SNACK DE ALERTAS-->
     <div class="col-md-8 col-md-offset-2 alert alert-danger" id="error-alert-snack" role="alert" style="margin-top: 16px; display:none;">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
         Debes completar correctamente el formulario
@@ -96,11 +99,45 @@
         <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
         Los cambios se han guardado correctamente
     </div>
+    <script type="text/javascript">
+        function showErrorMessage(time, message) {
+            playsound(0);
+
+            document.getElementById("error-alert-snack").style.display = "block";
+            document.getElementById("error-alert-snack").innerHTML = message;
+            if (time == null) {
+                document.getElementById("error-alert-snack").style.display = "none";
+                document.getElementById("error-alert-snack").innerHTML = message;
+            } else {
+                setTimeout(() => {
+                    document.getElementById("error-alert-snack").style.display = "none";
+                    document.getElementById("error-alert-snack").innerHTML = message;
+                }, time * 1000);
+            }
+        }
+        function showSuccessMessage(time, message) {
+            playsound(1);
+
+            document.getElementById("success-alert-snack").style.display = "block";
+            document.getElementById("success-alert-snack").innerHTML = message;
+            if (time == null) {
+                document.getElementById("success-alert-snack").style.display = "none";
+                document.getElementById("success-alert-snack").innerHTML = message;
+            } else {
+                setTimeout(() => {
+                    document.getElementById("success-alert-snack").style.display = "none";
+                    document.getElementById("success-alert-snack").innerHTML = message;
+                }, time * 1000);
+            }
+        }
+
+        retriveMessage();
+    </script>
 
     <!--FORMULARIO DE REGISTRO ACCESO-->
     <div class="col-sm-4" style="padding: 32px 32px 32px 32px; margin-top: 16px; background-color:#eeeeee; box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.40);">
         <h3 style="margin-top:0px; margin-bottom:20px;"><span class="glyphicon glyphicon-book"></span> Checador</h3>
-        
+
         <script type="text/javascript">
             function validateIDEmploye() {
                 var input = document.forms["form-ingress"]["idEmploye"]
@@ -185,11 +222,11 @@
         <br />
 
         <div style="background-color:#eeeeee; padding: 32px">
-            @using (Html.BeginForm("SubmitEgress", "Home", FormMethod.Post, new { id="form-egress", style="display: none;" }))
+            @using (Html.BeginForm("SubmitEgress", "Home", FormMethod.Post, new { id = "form-egress", style = "display: none;" }))
             {
-                @Html.TextBox("idAccessRegistry", null, new 
-                { 
-                    @class = "form-control", 
+                @Html.TextBox("idAccessRegistry", null, new
+                {
+                    @class = "form-control",
                     type = "number"
                 })
             }
