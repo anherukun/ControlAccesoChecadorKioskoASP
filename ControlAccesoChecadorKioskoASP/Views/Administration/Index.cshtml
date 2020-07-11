@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<div class="row" style="margin-top: 32px">
+    <!--SNACK DE ALERTAS-->
+    <div class="col-md-8 col-md-offset-2 alert alert-danger" id="error-alert-snack" role="alert" style="margin-top: 16px; display:none;">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        Debes completar correctamente el formulario
+    </div>
+    <div class="col-md-8 col-md-offset-2 alert alert-success" id="success-alert-snack" role="alert" style="margin-top: 16px; display:none;">
+        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+        Los cambios se han guardado correctamente
+    </div>
+
+    <!--FORMULARIO DE REGISTRO ACCESO-->
+    <div class="col-md-7">
+        <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
+            <div class="panel-heading" style="padding:16px;">
+                <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-book"></span> Reportes</h3>
+            </div>
+            <div class="panel-body">
+                <li>@Html.ActionLink("Reporte de accesos (detallados)", "AccessDetailed", "Administration")</li>
+            </div>
+        </div>
+
+        <a href="https://localhost:44359/Administration">
+            <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
+                <div class="panel-heading" style="padding:16px;">
+                    <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-file"></span> Auscencias</h3>
+                </div>
+            </div>
+        </a>
+    </div>
+    
+
+    <!--BACKLOG REGISTRY-->
+
+    <div class="col-md-3 col-md-offset-1" style="padding: 32px 32px 32px 32px; margin-top: 16px; background-color:#eeeeee;">
+        <h3 style="margin-top:0px; margin-bottom:20px;"><span class="glyphicon glyphicon-book"></span> Checador</h3>
+
+    </div>
+</div>

@@ -182,13 +182,13 @@
         @using (Html.BeginForm("SubmitIngress", "Home", FormMethod.Post, new { onsubmit = "return validateForm()", id = "form-ingress" }))
         {
             <h4 style="margin-bottom:8px;"><b>Ficha:</b> </h4>
-            @Html.TextBox("idEmploye", null, new
+                 @Html.TextBox("idEmploye", null, new
             {
-                 @class = "form-control",
-                 placeholder = "Ingresa tu ficha Ej. (582509)",
-                 type = "number",
-                 oninput = "validateIDEmploye()",
-                 style = "font-size: 12pt;"
+                @class = "form-control",
+                placeholder = "Ingresa tu ficha Ej. (582509)",
+                type = "number",
+                oninput = "validateIDEmploye()",
+                style = "font-size: 12pt;"
             })
             <h4 style="margin-bottom:8px; margin-top:16px;"><b>Trabajador:</b></h4>
             <h5 id="employeName" style="margin-bottom:8px;"></h5>

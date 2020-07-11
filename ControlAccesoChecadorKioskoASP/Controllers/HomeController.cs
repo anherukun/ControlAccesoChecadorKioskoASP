@@ -13,24 +13,6 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
 {
     public class HomeController : Controller
     {
-        // public ActionResult Index()
-        // {
-        //     int registryLimit = ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-registry-count") != null ?
-        //         int.Parse(ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-registry-count")) : 0;
-        //     Department department = ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected") != null ?
-        //         new DepartmentRepository().GetDepartment(int.Parse(ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-department-selected"))) :
-        //         null;
-        //     List<AccessRegistry> accessRegistries = department != null ? new AccessRegistryRepository().RetriveByDepartment(department.DepartmentId, registryLimit) :
-        //         null;
-        //     List<Employe> employes = new EmployeRepsitory().RetriveAll();
-        // 
-        //     
-        //     ViewData["Department"] = department;
-        //     ViewData["Employes"] = employes;
-        //     ViewData["AccessRegistries"] = accessRegistries;
-        // 
-        //     return View();
-        // }
         [HttpGet]
         public ActionResult Index(string msgType, string msgString)
         {
@@ -47,7 +29,12 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
             ViewData["Department"] = department;
             ViewData["Employes"] = employes;
             ViewData["AccessRegistries"] = accessRegistries;
-            ViewData["message"] = new { msgType, msgString };
+
+            if (msgType != null && msgString != null)
+            {
+                msgString = ApplicationManager.Base64Decode(msgString);
+                ViewData["message"] = new { msgType, msgString };
+            }
 
 
             return View();
@@ -70,7 +57,7 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
                 
                 new AccessRegistryRepository().Add(registry);
                 
-                return Redirect(Url.Action("Index", "Home", new { msgType = "success", msgString = "El acceso se registro correctamente" }));
+                return Redirect(Url.Action("Index", "Home", new { msgType = "success", msgString = ApplicationManager.Base64Encode("El acceso se registro correctamente") }));
             } else 
                 return Redirect("/");
         }
@@ -82,7 +69,7 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
 
             new AccessRegistryRepository().Update(registry);
 
-            return Redirect(Url.Action("Index", "Home", new { msgType = "success", msgString = "La salida se registro correctamente" }));
+            return Redirect(Url.Action("Index", "Home", new { msgType = "success", msgString = ApplicationManager.Base64Encode("La salida se registro correctamente") }));
         }
 
         public ActionResult About()
