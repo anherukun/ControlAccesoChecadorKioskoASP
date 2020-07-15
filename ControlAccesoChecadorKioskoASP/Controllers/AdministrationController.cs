@@ -14,7 +14,7 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
             return View();
         }
 
-        public ActionResult AccessDetailed()
+        public ActionResult ReportAccess()
         {
             return View();
         }

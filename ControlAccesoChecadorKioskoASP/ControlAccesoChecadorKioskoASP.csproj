@@ -198,6 +198,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Configurations\Index.cshtml" />
     <Content Include="Views\Administration\Index.cshtml" />
+    <Content Include="Views\Administration\ReportAccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

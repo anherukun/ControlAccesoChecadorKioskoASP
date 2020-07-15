@@ -1,0 +1,91 @@
+﻿
+@{
+    ViewBag.Title = "ReportAccess";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Reportes de acceso</h2>
+
+<div class="row" style="margin-top: 32px">
+    <!--SNACK DE ALERTAS-->
+    <div class="col-md-8 col-md-offset-2 alert alert-danger" id="error-alert-snack" role="alert" style="margin-top: 16px; display:none;">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        Debes completar correctamente el formulario
+    </div>
+    <div class="col-md-8 col-md-offset-2 alert alert-success" id="success-alert-snack" role="alert" style="margin-top: 16px; display:none;">
+        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+        Los cambios se han guardado correctamente
+    </div>
+
+    <!--FORMULARIOS-->
+    <div class="col-md-7">
+        <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
+            <div class="panel-heading" style="padding:16px;">
+                <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-book"></span> Busqueda de datos</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <input type="radio" id="rad-department" name="search" value="male">
+                        <label for="male">Por departamento</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="radio" id="rad-employe" name="search" value="male">
+                        <label for="male">Por trabajador</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="radio" id="rad-all" name="search" value="male">
+                        <label for="male">Busqueda completa</label>
+                    </div>
+                </div>
+
+                <div class="row col-md-12">
+                    @{using (Html.BeginForm("", "", FormMethod.Post, new { @class = "form-inline" }))
+                        {
+                            <div class="form-group" style="margin-top: 16px;">
+                                <label>Departamento</label>
+                                <select class="form-control">
+                                    <option value="-1">Selecciona el departamento...</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-top: 16px;">
+                                <label>Departamento</label>
+                                <select class="form-control">
+                                    <option value="-1">Selecciona el departamento...</option>
+                                </select>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
+            <div class="panel-heading" style="padding:16px;">
+                <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-book"></span> Resultados</h3>
+            </div>
+            <div class="panel-body">
+
+            </div>
+        </div>
+    </div>
+
+
+    <!--BACKLOG REGISTRY-->
+
+    <div class="col-md-3 col-md-offset-1" style="padding: 32px 32px 32px 32px; margin-top: 16px; background-color:#eeeeee;">
+        <h3 style="margin-top:0px; margin-bottom:20px;"><span class="glyphicon glyphicon-book"></span> Checador</h3>
+
+    </div>
+
+    <div class="col-md-12">
+        <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
+            <div class="panel-heading" style="padding:16px;">
+                <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-list"></span> Resultados</h3>
+            </div>
+            <div class="panel-body">
+
+            </div>
+        </div>
+    </div>
+</div>
