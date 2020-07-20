@@ -140,7 +140,7 @@
 
 
     <!--SIDE PANEL-->
-    <div class="col-md-3 col-md-offset-1" style="padding: 32px 32px 32px 32px; margin-top: 16px; background-color:#eeeeee;">
+    <div class="col-md-3 col-md-offset-1" style="padding: 32px 32px 32px 32px; margin-top: 16px; background-color:#eeeeee; display:none;">
         <h3 style="margin-top:0px; margin-bottom:20px;"><span class="glyphicon glyphicon-book"></span> Checador</h3>
 
     </div>
@@ -149,7 +149,20 @@
     <div class="col-md-12">
         <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
             <div class="panel-heading" style="padding:16px;">
-                <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-list"></span> Resultados</h3>
+                <h3 class="col-md-6" style="margin-top:0px; margin-bottom:0px; padding-left:0px;"><span class="glyphicon glyphicon-list"></span> Resultados</h3>
+                <div style="text-align:right;">
+                    <div class="btn-group" hidden>
+
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-floppy-save"></span> Guardar como... <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-header"><span class="glyphicon glyphicon-list-alt"></span> Hojas de datos (*.csv)</li>
+                            <li><a href="#"> Datos finales</a></li>
+                            <li><a href="#"> Datos detallados</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
             <table class="table">
