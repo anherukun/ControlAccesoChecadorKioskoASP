@@ -6,6 +6,11 @@
 
 <h2>Reportes de acceso</h2>
 
+<script type="text/javascript">
+    var departments = @Html.Raw(Json.Encode(ViewData["Departments"]));
+    var employes = @Html.Raw(Json.Encode(ViewData["Employes"]));
+</script>
+
 <div class="row" style="margin-top: 32px">
     <!--SNACK DE ALERTAS-->
     <div class="col-md-8 col-md-offset-2 alert alert-danger" id="error-alert-snack" role="alert" style="margin-top: 16px; display:none;">
@@ -63,12 +68,19 @@
                 </div>
 
                 <div class="row col-md-12">
-                    @{using (Html.BeginForm("SubmitReportAccess", "Administration", FormMethod.Post, new { @class = "form-inline", id = "form-1", style = "display: None;" }))
+                    @{using (Html.BeginForm("ReportAccess", "Administration", FormMethod.Post, new { @class = "form-inline", id = "form-1", style = "display: None;" }))
                         {
                             <div class="form-group" style="margin-top: 16px;">
                                 <label>Departamento</label>
                                 <select class="form-control" name="department">
                                     <option value="-1">Selecciona el departamento...</option>
+                                    @{
+                                        List<ControlAccesoChecadorKioskoASP.Models.Department> departments = ViewData["Departments"] as List<ControlAccesoChecadorKioskoASP.Models.Department>;
+                                        for (int i = 0; i < departments.Count; i++)
+                                        {
+                                            <option value="@departments[i].DepartmentId">@departments[i].DepartmentId  @departments[i].Name</option>
+                                        }
+                                    }
                                 </select>
                             </div>
 
@@ -85,7 +97,7 @@
                         }
                     }
 
-                    @{using (Html.BeginForm("SubmitReportAccess", "Administration", FormMethod.Post, new { @class = "form-inline", id = "form-2", style = "display: None;" }))
+                    @{using (Html.BeginForm("ReportAccess", "Administration", FormMethod.Post, new { @class = "form-inline", id = "form-2", style = "display: None;" }))
                         {
                             <div class="form-group" style="margin-top: 16px;">
                                 <label>Trabajador</label>
@@ -107,7 +119,7 @@
                         }
                     }
 
-                    @{using (Html.BeginForm("SubmitReportAccess", "Administration", FormMethod.Post, new { @class = "form-inline", id = "form-3", style = "display: None;" }))
+                    @{using (Html.BeginForm("ReportAccess", "Administration", FormMethod.Post, new { @class = "form-inline", id = "form-3", style = "display: None;" }))
                         {
                             <div class="form-group" style="margin-top: 16px;">
                                 <label>Iniciar desde</label>
@@ -124,33 +136,82 @@
                 </div>
             </div>
         </div>
-
-        <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
-            <div class="panel-heading" style="padding:16px;">
-                <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-book"></span> Resultados</h3>
-            </div>
-            <div class="panel-body">
-
-            </div>
-        </div>
     </div>
 
 
-    <!--BACKLOG REGISTRY-->
-
+    <!--SIDE PANEL-->
     <div class="col-md-3 col-md-offset-1" style="padding: 32px 32px 32px 32px; margin-top: 16px; background-color:#eeeeee;">
         <h3 style="margin-top:0px; margin-bottom:20px;"><span class="glyphicon glyphicon-book"></span> Checador</h3>
 
     </div>
 
+    <!--BACKLOG REGISTRY-->
     <div class="col-md-12">
         <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
             <div class="panel-heading" style="padding:16px;">
                 <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-list"></span> Resultados</h3>
             </div>
-            <div class="panel-body">
 
-            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Departamento</th>
+                        <th scope="col">Ficha</th>
+                        <th scope="col">Trabajador</th>
+                        <th scope="col">Fecha de entrada</th>
+                        <th scope="col">Entrada</th>
+                        <th scope="col">Fecha de salida</th>
+                        <th scope="col">Salida</th>
+                        <th scope="col">Horas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        if (ViewData["AccessRegistries"] != null)
+                        {
+                            List<ControlAccesoChecadorKioskoASP.Models.AccessRegistry> accessRegistries = ViewData["AccessRegistries"] as List<ControlAccesoChecadorKioskoASP.Models.AccessRegistry>;
+
+                            foreach (var item in accessRegistries)
+                            {
+                                DateTime IngressDateTime = new DateTime(item.IngressTicks);
+                                DateTime EgressDateTime;
+
+
+                                <tr>
+                                    <th scope="row">@item.Department.Name</th>
+                                    <td>@item.Employe.EmployeId</td>
+                                    <td>@item.Employe.Name</td>
+                                    <td>@IngressDateTime.ToShortDateString()</td>
+                                    <td>@IngressDateTime.ToShortTimeString()</td>
+                                    @if (item.EgressTicks != 0)
+                                    {
+                                        EgressDateTime = new DateTime(item.EgressTicks);
+
+                                        int hh = new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Hours
+                                            + (new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Days * 24);
+                                        int mm = new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Minutes;
+                                        string diferenceHours = "--";
+                                        string diferenceMinutes = "--";
+                                        diferenceHours = hh > 10 ? $"{hh}" : $"0{hh}";
+                                        diferenceMinutes = mm > 10 ? $"{mm}" : $"0{mm}";
+
+                                        <td>@EgressDateTime.ToShortDateString()</td>
+                                        <td>@EgressDateTime.ToShortTimeString()</td>
+                                        <td>@diferenceHours:@diferenceMinutes</td>
+                                    }
+                                    else
+                                    {
+                                        <td>...</td>
+                                        <td>--:--</td>
+                                        <td>--:--</td>
+                                    }
+
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
