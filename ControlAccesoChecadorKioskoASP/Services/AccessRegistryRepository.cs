@@ -77,5 +77,38 @@ namespace ControlAccesoChecadorKioskoASP.Services
                 return db.AccessRegistries.Find(accessRegistryId);
             }
         }
+
+        public static List<List<object>> GetCompleteMatrix(List<AccessRegistry> accessRegistries)
+        {
+            List<List<object>> matrix = new List<List<object>>();
+
+            // ACCESSREGISTRYID | DEPARTMENTID | EMPLOYEID | EMPLOYENAME | DEPARTMENTNAME | DATE(QUERYDATE) | INGRESSTICKS | INGRESSDATE | INGRESSTIME | EGRESSTICKS | EGRESSDATE | EGRESSTIME | INTIME
+
+            matrix.Add(new List<object> { "ACCESSREGISTRYID", "DEPARTMENTID", "EMPLOYEID", "EMPLOYENAME", "DEPARTMENTNAME", "DATE(QUERYDATE)", "INGRESSTICKS",
+                "INGRESSDATE", "INGRESSTIME", "EGRESSTICKS", "EGRESSDATE", "EGRESSTIME", "INTIME"});
+
+            foreach (var item in accessRegistries)
+            {
+                string diferenceHours = "--";
+                string diferenceMinutes = "--";
+
+                if (item.EgressTicks != 0)
+                {
+                    DateTime EgressDateTime = new DateTime(item.EgressTicks);
+
+                    int hh = new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Hours
+                        + (new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Days * 24);
+                    int mm = new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Minutes;
+                    diferenceHours = hh > 10 ? $"{hh}" : $"0{hh}";
+                    diferenceMinutes = mm > 10 ? $"{mm}" : $"0{mm}";
+                }
+
+                matrix.Add(new List<object> { item.AccessRegistryId, item.DepartmentId, item.EmployeId, item.Employe.Name, item.Department.Name, item.Date, item.IngressTicks,
+                new DateTime(item.IngressTicks).ToLongDateString(), new DateTime(item.IngressTicks).ToShortTimeString(), item.EgressTicks,
+                    new DateTime(item.EgressTicks).ToLongDateString(), new DateTime(item.EgressTicks).ToShortTimeString(), $"{diferenceHours}:{diferenceMinutes}"});
+            }
+
+            return matrix;
+        }
     }
 }

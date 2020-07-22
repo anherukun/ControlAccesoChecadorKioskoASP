@@ -94,7 +94,7 @@
                             <div class="form-group" style="margin-top: 16px;">
                                 <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar</button>
                             </div>
-                        }
+                                        }
                     }
 
                     @{using (Html.BeginForm("ReportAccess", "Administration", FormMethod.Post, new { @class = "form-inline", id = "form-2", style = "display: None;" }))
@@ -153,14 +153,41 @@
                 <div style="text-align:right;">
                     <div class="btn-group" hidden>
 
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="glyphicon glyphicon-floppy-save"></span> Guardar como... <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li class="dropdown-header"><span class="glyphicon glyphicon-list-alt"></span> Hojas de datos (*.csv)</li>
-                            <li><a href="#"> Datos finales</a></li>
-                            <li><a href="#"> Datos detallados</a></li>
-                        </ul>
+                        <script type="text/javascript">
+                            function downloadMatrixToCSV(option) {
+                                // 1: CompleteMatrix | 2: JustFinalData
+
+                                var form = document.forms["exportform"]
+                                form.method = "POST";
+
+                                switch (option) {
+                                    case 1:
+                                        form.action = "@Url.Action("ExportCompleteMatrixToCSV", "Administration")";
+                                        form.submit();
+                                        break;
+
+                                    case 2:
+                                        break;
+
+                                    default:
+                                }
+                            }
+
+                        </script>
+
+                        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "exportform" }))
+                        {
+                            <input type="text" name="data" style="display:none;" value="@Html.Raw(ViewData["AccessRegistriesJSON"])"/>
+
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="glyphicon glyphicon-floppy-save"></span> Guardar como... <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-header"><span class="glyphicon glyphicon-list-alt"></span> Hojas de datos (*.csv)</li>
+                                <li><a href="#"> Datos interpretados</a></li>
+                                <li><a onclick="downloadMatrixToCSV(1)"> Datos interpretados + metadatos</a></li>
+                            </ul>
+                        }
                     </div>
                 </div>
             </div>

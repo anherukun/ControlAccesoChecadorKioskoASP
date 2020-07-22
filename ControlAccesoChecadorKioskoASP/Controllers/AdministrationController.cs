@@ -1,10 +1,13 @@
-﻿using ControlAccesoChecadorKioskoASP.Models;
+﻿using ControlAccesoChecadorKioskoASP.Application;
+using ControlAccesoChecadorKioskoASP.Models;
 using ControlAccesoChecadorKioskoASP.Services;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 
 namespace ControlAccesoChecadorKioskoASP.Controllers
@@ -41,6 +44,7 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
             if (department != 0)
             {
                 accessRegistries = new AccessRegistryRepository().RetriveByDepartment(department, DateTime.Parse(dateStart), DateTime.Parse(dateEnd));
+                ViewData["AccessRegistriesJSON"] = ApplicationManager.Base64Encode(JsonConvert.SerializeObject(accessRegistries));
                 ViewData["AccessRegistries"] = accessRegistries;
             }
             else if (employeId != 0)
@@ -55,6 +59,16 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
             }
 
             return View();
+        }
+
+        [HttpPost]
+        public FileResult ExportCompleteMatrixToCSV(string data)
+        {
+            string json = ApplicationManager.Base64Decode(data);
+            List<AccessRegistry> accessRegistries = JsonConvert.DeserializeObject<List<AccessRegistry>>(json);
+
+            return File(CSVManager.FromMatrixToCSVBytes(AccessRegistryRepository.GetCompleteMatrix(accessRegistries)), "application/x-msexcel", "export.csv");
+            //return File("", "document/csv");
         }
     }
 }
