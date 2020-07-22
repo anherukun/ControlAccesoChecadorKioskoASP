@@ -50,11 +50,13 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
             else if (employeId != 0)
             {
                 accessRegistries = new AccessRegistryRepository().RetriveByEmploye(employeId, DateTime.Parse(dateStart), DateTime.Parse(dateEnd));
+                ViewData["AccessRegistriesJSON"] = ApplicationManager.Base64Encode(JsonConvert.SerializeObject(accessRegistries));
                 ViewData["AccessRegistries"] = accessRegistries;
             }
             else
             {
                 accessRegistries = new AccessRegistryRepository().RetriveAll(DateTime.Parse(dateStart), DateTime.Parse(dateEnd));
+                ViewData["AccessRegistriesJSON"] = ApplicationManager.Base64Encode(JsonConvert.SerializeObject(accessRegistries));
                 ViewData["AccessRegistries"] = accessRegistries;
             }
 

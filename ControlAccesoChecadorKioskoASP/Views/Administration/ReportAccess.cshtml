@@ -177,15 +177,15 @@
 
                         @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "exportform" }))
                         {
-                            <input type="text" name="data" style="display:none;" value="@Html.Raw(ViewData["AccessRegistriesJSON"])"/>
+                            <input type="text" name="data" style="display:none;" readonly value="@Html.Raw(ViewData["AccessRegistriesJSON"])"/>
 
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="glyphicon glyphicon-floppy-save"></span> Guardar como... <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
                                 <li class="dropdown-header"><span class="glyphicon glyphicon-list-alt"></span> Hojas de datos (*.csv)</li>
-                                <li><a href="#"> Datos interpretados</a></li>
-                                <li><a onclick="downloadMatrixToCSV(1)"> Datos interpretados + metadatos</a></li>
+                                <li><a href="#" onclick="downloadMatrixToCSV(2)"> Datos interpretados</a></li>
+                                <li><a href="#" onclick="downloadMatrixToCSV(1)"> Datos interpretados + metadatos</a></li>
                             </ul>
                         }
                     </div>
