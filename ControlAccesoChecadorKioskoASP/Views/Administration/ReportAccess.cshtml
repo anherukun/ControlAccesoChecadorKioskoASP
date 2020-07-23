@@ -1,10 +1,10 @@
 ﻿
 @{
-    ViewBag.Title = "ReportAccess";
+    ViewBag.Title = "Reportes de acceso";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Reportes de acceso</h2>
+<h2 style="margin-top: 32px;">Reportes de acceso</h2>
 
 <script type="text/javascript">
     var departments = @Html.Raw(Json.Encode(ViewData["Departments"]));
@@ -23,137 +23,191 @@
     </div>
 
     <!--FORMULARIOS-->
-    <div class="col-md-7">
-        <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
-            <div class="panel-heading" style="padding:16px;">
-                <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-book"></span> Busqueda de datos</h3>
-            </div>
-            <div class="panel-body">
-                <script type="text/javascript">
-                    function openForm(option) {
-                        document.getElementById("form-1").style.display = "None";
-                        document.getElementById("form-2").style.display = "None";
-                        document.getElementById("form-3").style.display = "None";
-                        switch (option) {
-                            case 1:
-                                document.getElementById("form-1").style.display = "Block";
-                                break;
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
+                <div class="panel-heading" style="padding:16px;">
+                    <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-book"></span> Busqueda de datos</h3>
+                </div>
+                <div class="panel-body">
+                    <script type="text/javascript">
+                        function openForm(option) {
+                            document.getElementById("form-1").style.display = "None";
+                            document.getElementById("form-2").style.display = "None";
+                            document.getElementById("form-3").style.display = "None";
+                            switch (option) {
+                                case 1:
+                                    document.getElementById("form-1").style.display = "Block";
+                                    break;
 
-                            case 2:
-                                document.getElementById("form-2").style.display = "Block";
-                                break;
+                                case 2:
+                                    document.getElementById("form-2").style.display = "Block";
+                                    break;
 
-                            case 3:
-                                document.getElementById("form-3").style.display = "Block";
-                                break;
+                                case 3:
+                                    document.getElementById("form-3").style.display = "Block";
+                                    break;
 
-                            default:
+                                default:
+                            }
                         }
-                    }
-                </script>
 
-                <div class="row">
-                    <div class="col-md-4">
-                        <input type="radio" id="rad-department" name="search" onclick="openForm(1)">
-                        <label for="male">Por departamento</label>
+                        function validateSubmition(option) {
+                            var form;
+                            switch (option) {
+                                case 1:
+                                    form = document.forms["form-1"];
+                                    var departmentid = form["departmentId"].value;
+                                    var date1 = form["datestart"].value;
+                                    var date2 = form["dateend"].value;
+                                    if (departmentid > -1 && date1 != "" && date2 != "") {
+                                        return true;
+                                    }
+                                    break;
+
+                                case 2:
+                                    form = document.forms["form-2"];
+                                    var employeid = form["employeId"].value;
+                                    var date1 = form["datestart"].value;
+                                    var date2 = form["dateend"].value;
+                                    if (employeid != null && date1 != "" && date2 != "") {
+                                        return true;
+                                    }
+                                    break;
+
+                                case 3:
+                                    form = document.forms["form-3"];
+                                    var date1 = form["datestart"].value;
+                                    var date2 = form["dateend"].value;
+                                    if (date1 != "" && date2 != "") {
+                                        return true;
+                                    }
+                                    break;
+                                default:
+                            }
+                            alert("Formulario incompleto");
+                            return false;
+                        }
+                    </script>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input type="radio" id="rad-department" name="search" onclick="openForm(1)">
+                            <label for="rad-department">Por departamento</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="radio" id="rad-employe" name="search" onclick="openForm(2)">
+                            <label for="rad-employe">Por trabajador</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="radio" id="rad-all" name="search" onclick="openForm(3)">
+                            <label for="rad-all">Busqueda completa</label>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <input type="radio" id="rad-employe" name="search" onclick="openForm(2)">
-                        <label for="male">Por trabajador</label>
-                    </div>
-                    <div class="col-md-4">
-                        <input type="radio" id="rad-all" name="search" onclick="openForm(3)">
-                        <label for="male">Busqueda completa</label>
+
+                    <div class="row col-md-12">
+                        @{using (Html.BeginForm("ReportAccess", "Administration", FormMethod.Post, new { @class = "form-inline", id = "form-1", style = "display: None;", onsubmit = "return validateSubmition(1)" }))
+                            {
+                                <div class="form-group" style="margin-top: 16px;">
+                                    <label style="width:110px;">Departamento</label>
+                                    <select class="form-control" name="departmentId">
+                                        <option value="-1">Selecciona el departamento...</option>
+                                        @{
+                                            List<ControlAccesoChecadorKioskoASP.Models.Department> departments = ViewData["Departments"] as List<ControlAccesoChecadorKioskoASP.Models.Department>;
+                                            for (int i = 0; i < departments.Count; i++)
+                                            {
+                                                <option value="@departments[i].DepartmentId">@departments[i].DepartmentId  @departments[i].Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="form-group" style="margin-top: 16px;">
+                                    <label style="width:110px;">Iniciar desde</label>
+                                    <input type="date" name="datestart" />
+                                    <label style="width:110px;">Terminar hasta</label>
+                                    <input type="date" name="dateend" />
+                                </div>
+
+                                <div class="form-group" style="margin-top: 16px;">
+                                    <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar</button>
+                                </div>
+                            }
+                        }
+
+                        @{using (Html.BeginForm("ReportAccess", "Administration", FormMethod.Post, new { @class = "form-inline", id = "form-2", style = "display: None;", onsubmit = "return validateSubmition(2)" }))
+                            {
+                                <div class="form-group" style="margin-top: 16px;">
+                                    <label style="width:110px;">Trabajador</label>
+                                    <input class="form-control" type="number" name="employeId" placeholder="Ingresa la ficha Ej. (582509)" />
+                                    <label>Nombre:</label>
+                                    <label>...</label>
+                                </div>
+
+                                <div class="form-group" style="margin-top: 16px;">
+                                    <label style="width:110px;">Iniciar desde</label>
+                                    <input type="date" name="datestart" />
+                                    <label style="width:110px;">Terminar hasta</label>
+                                    <input type="date" name="dateend" />
+                                </div>
+
+                                <div class="form-group" style="margin-top: 16px;">
+                                    <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar</button>
+                                </div>
+                            }
+                        }
+
+                        @{using (Html.BeginForm("ReportAccess", "Administration", FormMethod.Post, new { @class = "form-inline", id = "form-3", style = "display: None;", onsubmit = "return validateSubmition(3)" }))
+                            {
+                                <div class="form-group" style="margin-top: 16px;">
+                                    <label style="width:110px;">Iniciar desde</label>
+                                    <input type="date" name="datestart" />
+                                    <label style="width:110px;">Terminar hasta</label>
+                                    <input type="date" name="dateend" />
+                                </div>
+
+                                <div class="form-group" style="margin-top: 16px;">
+                                    <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar</button>
+                                </div>
+                            }
+                        }
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="row col-md-12">
-                    @{using (Html.BeginForm("ReportAccess", "Administration", FormMethod.Post, new { @class = "form-inline", id = "form-1", style = "display: None;" }))
-                        {
-                            <div class="form-group" style="margin-top: 16px;">
-                                <label>Departamento</label>
-                                <select class="form-control" name="department">
-                                    <option value="-1">Selecciona el departamento...</option>
-                                    @{
-                                        List<ControlAccesoChecadorKioskoASP.Models.Department> departments = ViewData["Departments"] as List<ControlAccesoChecadorKioskoASP.Models.Department>;
-                                        for (int i = 0; i < departments.Count; i++)
-                                        {
-                                            <option value="@departments[i].DepartmentId">@departments[i].DepartmentId  @departments[i].Name</option>
-                                        }
-                                    }
-                                </select>
-                            </div>
-
-                            <div class="form-group" style="margin-top: 16px;">
-                                <label>Iniciar desde</label>
-                                <input type="date" name="datestart" />
-                                <label>Terminar hasta</label>
-                                <input type="date" name="dateend" />
-                            </div>
-
-                            <div class="form-group" style="margin-top: 16px;">
-                                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar</button>
-                            </div>
-                                        }
-                    }
-
-                    @{using (Html.BeginForm("ReportAccess", "Administration", FormMethod.Post, new { @class = "form-inline", id = "form-2", style = "display: None;" }))
-                        {
-                            <div class="form-group" style="margin-top: 16px;">
-                                <label>Trabajador</label>
-                                <input class="form-control" type="number" name="employeId" placeholder="Ingresa la ficha Ej. (582509)" />
-                                <label>Nombre:</label>
-                                <label>...</label>
-                            </div>
-
-                            <div class="form-group" style="margin-top: 16px;">
-                                <label>Iniciar desde</label>
-                                <input type="date" name="datestart" />
-                                <label>Terminar hasta</label>
-                                <input type="date" name="dateend" />
-                            </div>
-
-                            <div class="form-group" style="margin-top: 16px;">
-                                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar</button>
-                            </div>
-                        }
-                    }
-
-                    @{using (Html.BeginForm("ReportAccess", "Administration", FormMethod.Post, new { @class = "form-inline", id = "form-3", style = "display: None;" }))
-                        {
-                            <div class="form-group" style="margin-top: 16px;">
-                                <label>Iniciar desde</label>
-                                <input type="date" name="datestart" />
-                                <label>Terminar hasta</label>
-                                <input type="date" name="dateend" />
-                            </div>
-
-                            <div class="form-group" style="margin-top: 16px;">
-                                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar</button>
-                            </div>
-                        }
-                    }
+        <!--SIDE PANEL-->
+        <div class="col-md-4">
+            <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
+                <a href="#glosary" data-toggle="collapse">
+                    <div class="panel-heading" style="padding:16px;">
+                        <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-question-sign"></span> Glosario <span class="caret"></span></h3>
+                    </div>
+                </a>
+                <div class="panel-body collapse" id="glosary">
+                    <label>Hoja de datos (*.csv)</label>
+                    <p>Es una representacion de valores separadas por (;) permitiendo la lectura de la informacion programas como Microsoft Excel</p>
+                    <label>Datos interpretados</label>
+                    <p>Representa los valores de los registros con informacion de facil lectura</p>
+                    <label>Datos interpretados + metadatos</label>
+                    <p>Combina los datos interpretados con los valores sin procesar de cada registro</p>
                 </div>
             </div>
         </div>
     </div>
 
-
-    <!--SIDE PANEL-->
-    <div class="col-md-3 col-md-offset-1" style="padding: 32px 32px 32px 32px; margin-top: 16px; background-color:#eeeeee; display:none;">
-        <h3 style="margin-top:0px; margin-bottom:20px;"><span class="glyphicon glyphicon-book"></span> Checador</h3>
-
-    </div>
-
     <!--BACKLOG REGISTRY-->
-    <div class="col-md-12">
-        <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
-            <div class="panel-heading" style="padding:16px;">
-                <h3 class="col-md-6" style="margin-top:0px; margin-bottom:0px; padding-left:0px;"><span class="glyphicon glyphicon-list"></span> Resultados</h3>
-                <div style="text-align:right;">
-                    <div class="btn-group" hidden>
+    @{
+        if (ViewData["AccessRegistries"] as List<ControlAccesoChecadorKioskoASP.Models.AccessRegistry> != null && (ViewData["AccessRegistries"] as List<ControlAccesoChecadorKioskoASP.Models.AccessRegistry>).Count > 0)
+        {
+            <div>
+                <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
+                    <div class="panel-heading" style="padding:16px;">
+                        <h3 class="col-md-6" style="margin-top:0px; margin-bottom:0px; padding-left:0px;"><span class="glyphicon glyphicon-list"></span> Resultados</h3>
+                        <div style="text-align:right;">
+                            <div class="btn-group" hidden>
 
-                        <script type="text/javascript">
+                                    <script type="text/javascript">
                             function downloadMatrixToCSV(option) {
                                 // 1: CompleteMatrix | 2: JustFinalData
 
@@ -167,91 +221,93 @@
                                         break;
 
                                     case 2:
+                                        form.action = "@Url.Action("ExportFinalMatrixToCSV", "Administration")";
+                                        form.submit();
                                         break;
 
                                     default:
                                 }
                             }
 
-                        </script>
+                                    </script>
 
-                        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "exportform" }))
-                        {
-                            <input type="text" name="data" style="display:none;" readonly value="@Html.Raw(ViewData["AccessRegistriesJSON"])"/>
+                                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "exportform" }))
+                                {
+                                    <input type="text" name="data" style="display:none;" readonly value="@Html.Raw(ViewData["AccessRegistriesJSON"])" />
 
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="glyphicon glyphicon-floppy-save"></span> Guardar como... <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li class="dropdown-header"><span class="glyphicon glyphicon-list-alt"></span> Hojas de datos (*.csv)</li>
-                                <li><a href="#" onclick="downloadMatrixToCSV(2)"> Datos interpretados</a></li>
-                                <li><a href="#" onclick="downloadMatrixToCSV(1)"> Datos interpretados + metadatos</a></li>
-                            </ul>
-                        }
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="glyphicon glyphicon-floppy-save"></span> Guardar como... <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li class="dropdown-header"><span class="glyphicon glyphicon-list-alt"></span> Hojas de datos (*.csv)</li>
+                                        <li><a href="#" onclick="downloadMatrixToCSV(1)"> Datos interpretados + metadatos</a></li>
+                                        <li><a href="#" onclick="downloadMatrixToCSV(2)"> Datos interpretados</a></li>
+                                    </ul>
+                                }
+                            </div>
+                        </div>
                     </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Departamento</th>
+                                <th scope="col">Ficha</th>
+                                <th scope="col">Trabajador</th>
+                                <th scope="col">Fecha de entrada</th>
+                                <th scope="col">Entrada</th>
+                                <th scope="col">Fecha de salida</th>
+                                <th scope="col">Salida</th>
+                                <th scope="col">Horas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                List<ControlAccesoChecadorKioskoASP.Models.AccessRegistry> accessRegistries = ViewData["AccessRegistries"] as List<ControlAccesoChecadorKioskoASP.Models.AccessRegistry>;
+
+                                foreach (var item in accessRegistries)
+                                {
+                                    DateTime IngressDateTime = new DateTime(item.IngressTicks);
+                                    DateTime EgressDateTime;
+
+
+                                    <tr>
+                                        <th scope="row">@item.Department.Name</th>
+                                        <td>@item.Employe.EmployeId</td>
+                                        <td>@item.Employe.Name</td>
+                                        <td>@IngressDateTime.ToShortDateString()</td>
+                                        <td>@IngressDateTime.ToShortTimeString()</td>
+                                        @if (item.EgressTicks != 0)
+                                        {
+                                            EgressDateTime = new DateTime(item.EgressTicks);
+
+                                            int hh = new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Hours
+                                                + (new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Days * 24);
+                                            int mm = new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Minutes;
+                                            string diferenceHours = "--";
+                                            string diferenceMinutes = "--";
+                                            diferenceHours = hh > 10 ? $"{hh}" : $"0{hh}";
+                                            diferenceMinutes = mm > 10 ? $"{mm}" : $"0{mm}";
+
+                                            <td>@EgressDateTime.ToShortDateString()</td>
+                                            <td>@EgressDateTime.ToShortTimeString()</td>
+                                            <td>@diferenceHours:@diferenceMinutes</td>
+                                        }
+                                        else
+                                        {
+                                            <td>...</td>
+                                            <td>--:--</td>
+                                            <td>--:--</td>
+                                        }
+
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        }
+    }
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Departamento</th>
-                        <th scope="col">Ficha</th>
-                        <th scope="col">Trabajador</th>
-                        <th scope="col">Fecha de entrada</th>
-                        <th scope="col">Entrada</th>
-                        <th scope="col">Fecha de salida</th>
-                        <th scope="col">Salida</th>
-                        <th scope="col">Horas</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                        if (ViewData["AccessRegistries"] != null)
-                        {
-                            List<ControlAccesoChecadorKioskoASP.Models.AccessRegistry> accessRegistries = ViewData["AccessRegistries"] as List<ControlAccesoChecadorKioskoASP.Models.AccessRegistry>;
-
-                            foreach (var item in accessRegistries)
-                            {
-                                DateTime IngressDateTime = new DateTime(item.IngressTicks);
-                                DateTime EgressDateTime;
-
-
-                                <tr>
-                                    <th scope="row">@item.Department.Name</th>
-                                    <td>@item.Employe.EmployeId</td>
-                                    <td>@item.Employe.Name</td>
-                                    <td>@IngressDateTime.ToShortDateString()</td>
-                                    <td>@IngressDateTime.ToShortTimeString()</td>
-                                    @if (item.EgressTicks != 0)
-                                    {
-                                        EgressDateTime = new DateTime(item.EgressTicks);
-
-                                        int hh = new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Hours
-                                            + (new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Days * 24);
-                                        int mm = new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Minutes;
-                                        string diferenceHours = "--";
-                                        string diferenceMinutes = "--";
-                                        diferenceHours = hh > 10 ? $"{hh}" : $"0{hh}";
-                                        diferenceMinutes = mm > 10 ? $"{mm}" : $"0{mm}";
-
-                                        <td>@EgressDateTime.ToShortDateString()</td>
-                                        <td>@EgressDateTime.ToShortTimeString()</td>
-                                        <td>@diferenceHours:@diferenceMinutes</td>
-                                    }
-                                    else
-                                    {
-                                        <td>...</td>
-                                        <td>--:--</td>
-                                        <td>--:--</td>
-                                    }
-
-                                </tr>
-                            }
-                        }
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
 </div>

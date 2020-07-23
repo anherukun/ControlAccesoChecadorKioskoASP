@@ -1,10 +1,10 @@
 ﻿
 @{
-    ViewBag.Title = "Administracion";
+    ViewBag.Title = "Herramientas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2 style="margin-top: 16px;">Administracion</h2>
+<h2 style="margin-top: 32px;">Herramientas</h2>
 
 <div class="row" style="margin-top: 32px">
     <!--SNACK DE ALERTAS-->
@@ -24,9 +24,11 @@
                 <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-book"></span> Reportes</h3>
             </div>
             <div class="panel-body">
-                <ul>
-                    <li>@Html.ActionLink("Reporte de accesos", "ReportAccess", "Administration")</li>
-                </ul>
+                <a href="@Url.Action("ReportAccess", "Administration")">
+                    <div>
+                        <h4><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> Reporte de accesos</h4>
+                    </div>
+                </a>
             </div>
         </div>
 

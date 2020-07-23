@@ -84,17 +84,22 @@ namespace ControlAccesoChecadorKioskoASP.Services
 
             // ACCESSREGISTRYID | DEPARTMENTID | EMPLOYEID | EMPLOYENAME | DEPARTMENTNAME | DATE(QUERYDATE) | INGRESSTICKS | INGRESSDATE | INGRESSTIME | EGRESSTICKS | EGRESSDATE | EGRESSTIME | INTIME
 
-            matrix.Add(new List<object> { "ACCESSREGISTRYID", "DEPARTMENTID", "EMPLOYEID", "EMPLOYENAME", "DEPARTMENTNAME", "DATE(QUERYDATE)", "INGRESSTICKS",
-                "INGRESSDATE", "INGRESSTIME", "EGRESSTICKS", "EGRESSDATE", "EGRESSTIME", "INTIME"});
+            matrix.Add(new List<object> { "ACCESSREGISTRYID", "CLAVE DEPARTAMENTO", "FICHA", "TRABAJADOR", "DEPARTAMENTO", "QUERYDATE", "INGRESSTICKS",
+                "FECHA DE ENTRADA", "HORA DE ENTRADA", "EGRESSTICKS", "FECHA DE SALIDA", "HORA DE SALIDA", "TIEMPO"});
 
             foreach (var item in accessRegistries)
             {
-                string diferenceHours = "--";
-                string diferenceMinutes = "--";
+                string diferenceHours = "00";
+                string diferenceMinutes = "00";
+                string egressdatestring = "";
+                string egresstimestring = "";
 
                 if (item.EgressTicks != 0)
                 {
                     DateTime EgressDateTime = new DateTime(item.EgressTicks);
+
+                    egressdatestring = EgressDateTime.ToShortDateString();
+                    egresstimestring = EgressDateTime.ToShortTimeString();
 
                     int hh = new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Hours
                         + (new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Days * 24);
@@ -103,9 +108,68 @@ namespace ControlAccesoChecadorKioskoASP.Services
                     diferenceMinutes = mm > 10 ? $"{mm}" : $"0{mm}";
                 }
 
-                matrix.Add(new List<object> { item.AccessRegistryId, item.DepartmentId, item.EmployeId, item.Employe.Name, item.Department.Name, item.Date, item.IngressTicks,
-                new DateTime(item.IngressTicks).ToLongDateString(), new DateTime(item.IngressTicks).ToShortTimeString(), item.EgressTicks,
-                    new DateTime(item.EgressTicks).ToLongDateString(), new DateTime(item.EgressTicks).ToShortTimeString(), $"{diferenceHours}:{diferenceMinutes}"});
+                // ACCESSREGISTRYID | DEPARTMENTID | EMPLOYEID | EMPLOYENAME | DEPARTMENTNAME | DATE(QUERYDATE) | INGRESSTICKS | INGRESSDATE | INGRESSTIME | EGRESSTICKS | EGRESSDATE | EGRESSTIME | INTIME
+
+                matrix.Add(new List<object> { 
+                    item.AccessRegistryId, 
+                    item.DepartmentId, 
+                    item.EmployeId, 
+                    item.Employe.Name, 
+                    item.Department.Name, 
+                    item.Date, 
+                    item.IngressTicks,
+                    new DateTime(item.IngressTicks).ToShortDateString(), 
+                    new DateTime(item.IngressTicks).ToShortTimeString(), 
+                    item.EgressTicks,
+                    egressdatestring, 
+                    egresstimestring, 
+                    $"{diferenceHours}:{diferenceMinutes}"
+                });
+            }
+
+            return matrix;
+        }
+
+        public static List<List<object>> GetFinalMatrix(List<AccessRegistry> accessRegistries)
+        {
+            List<List<object>> matrix = new List<List<object>>();
+
+            matrix.Add(new List<object> {"CLAVE DEPARTAMENTO", "FICHA", "TRABAJADOR", "DEPARTAMENTO", "FECHA DE ENTRADA", "HORA DE ENTRADA", "FECHA DE SALIDA", "HORA DE SALIDA", "TIEMPO"});
+
+            foreach (var item in accessRegistries)
+            {
+                string diferenceHours = "00";
+                string diferenceMinutes = "00";
+                string egressdatestring = "";
+                string egresstimestring = "";
+
+                if (item.EgressTicks != 0)
+                {
+                    DateTime EgressDateTime = new DateTime(item.EgressTicks);
+
+                    egressdatestring = EgressDateTime.ToShortDateString();
+                    egresstimestring = EgressDateTime.ToShortTimeString();
+
+                    int hh = new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Hours
+                        + (new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Days * 24);
+                    int mm = new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Minutes;
+                    diferenceHours = hh > 10 ? $"{hh}" : $"0{hh}";
+                    diferenceMinutes = mm > 10 ? $"{mm}" : $"0{mm}";
+                }
+
+                // DEPARTMENTID | EMPLOYEID | EMPLOYENAME | DEPARTMENTNAME | INGRESSDATE | INGRESSTIME | EGRESSDATE | EGRESSTIME | INTIME
+
+                matrix.Add(new List<object> {
+                    item.DepartmentId,
+                    item.EmployeId,
+                    item.Employe.Name,
+                    item.Department.Name,
+                    new DateTime(item.IngressTicks).ToShortDateString(),
+                    new DateTime(item.IngressTicks).ToShortTimeString(),
+                    egressdatestring,
+                    egresstimestring,
+                    $"{diferenceHours}:{diferenceMinutes}"
+                });
             }
 
             return matrix;

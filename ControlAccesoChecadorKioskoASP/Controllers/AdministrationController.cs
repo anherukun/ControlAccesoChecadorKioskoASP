@@ -32,7 +32,7 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
         }
 
         [HttpPost]
-        public ActionResult ReportAccess(string dateStart, string dateEnd, int department = 0, int employeId = 0)
+        public ActionResult ReportAccess(string dateStart, string dateEnd, int departmentId = 0, int employeId = 0)
         {
             List<Department> departments = new DepartmentRepository().RetriveAll();
             List<Employe> employes = new EmployeRepsitory().RetriveAll();
@@ -41,9 +41,9 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
             ViewData["Departments"] = departments;
             ViewData["Employes"] = employes;
 
-            if (department != 0)
+            if (departmentId != 0)
             {
-                accessRegistries = new AccessRegistryRepository().RetriveByDepartment(department, DateTime.Parse(dateStart), DateTime.Parse(dateEnd));
+                accessRegistries = new AccessRegistryRepository().RetriveByDepartment(departmentId, DateTime.Parse(dateStart), DateTime.Parse(dateEnd));
                 ViewData["AccessRegistriesJSON"] = ApplicationManager.Base64Encode(JsonConvert.SerializeObject(accessRegistries));
                 ViewData["AccessRegistries"] = accessRegistries;
             }
@@ -70,6 +70,15 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
             List<AccessRegistry> accessRegistries = JsonConvert.DeserializeObject<List<AccessRegistry>>(json);
 
             return File(CSVManager.FromMatrixToCSVBytes(AccessRegistryRepository.GetCompleteMatrix(accessRegistries)), "application/x-msexcel", "export.csv");
+            //return File("", "document/csv");
+        }
+        [HttpPost]
+        public FileResult ExportFinalMatrixToCSV(string data)
+        {
+            string json = ApplicationManager.Base64Decode(data);
+            List<AccessRegistry> accessRegistries = JsonConvert.DeserializeObject<List<AccessRegistry>>(json);
+
+            return File(CSVManager.FromMatrixToCSVBytes(AccessRegistryRepository.GetFinalMatrix(accessRegistries)), "application/x-msexcel", "export.csv");
             //return File("", "document/csv");
         }
     }
