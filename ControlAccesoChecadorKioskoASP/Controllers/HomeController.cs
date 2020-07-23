@@ -13,7 +13,8 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        [HttpGet]
+        public ActionResult Index(string msgType, string msgString)
         {
             int registryLimit = ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-registry-count") != null ?
                 int.Parse(ClientSideManager.RetriveCookieFromCollection(Request.Cookies, "client-registry-count")) : 0;
@@ -24,10 +25,17 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
                 null;
             List<Employe> employes = new EmployeRepsitory().RetriveAll();
 
-            
+
             ViewData["Department"] = department;
             ViewData["Employes"] = employes;
             ViewData["AccessRegistries"] = accessRegistries;
+
+            if (msgType != null && msgString != null)
+            {
+                msgString = ApplicationManager.Base64Decode(msgString);
+                ViewData["message"] = new { msgType, msgString };
+            }
+
 
             return View();
         }
@@ -48,9 +56,10 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
                 registry.EgressTicks = 0;
                 
                 new AccessRegistryRepository().Add(registry);
-            }
-
-            return Redirect("/");
+                
+                return Redirect(Url.Action("Index", "Home", new { msgType = "success", msgString = ApplicationManager.Base64Encode("El acceso se registro correctamente") }));
+            } else 
+                return Redirect("/");
         }
         [HttpPost]
         public ActionResult SubmitEgress(int idAccessRegistry)
@@ -60,7 +69,7 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
 
             new AccessRegistryRepository().Update(registry);
 
-            return Redirect("/");
+            return Redirect(Url.Action("Index", "Home", new { msgType = "success", msgString = ApplicationManager.Base64Encode("La salida se registro correctamente") }));
         }
 
         public ActionResult About()

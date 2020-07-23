@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewBag.Title = "Herramientas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 style="margin-top: 32px;">Herramientas</h2>
+
+<div class="row" style="margin-top: 32px">
+    <!--SNACK DE ALERTAS-->
+    <div class="col-md-8 col-md-offset-2 alert alert-danger" id="error-alert-snack" role="alert" style="margin-top: 16px; display:none;">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        Debes completar correctamente el formulario
+    </div>
+    <div class="col-md-8 col-md-offset-2 alert alert-success" id="success-alert-snack" role="alert" style="margin-top: 16px; display:none;">
+        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+        Los cambios se han guardado correctamente
+    </div>
+
+    <div class="row">
+        <!--Links-->
+        <div class="col-md-8">
+            <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
+                <div class="panel-heading" style="padding:16px;">
+                    <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-book"></span> Reportes</h3>
+                </div>
+                <div class="panel-body">
+                    <a href="@Url.Action("ReportAccess", "Administration")">
+                        <div>
+                            <h4><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> Reporte de accesos</h4>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <a href="@Url.Action("Index", "Administration")" style="display:none;">
+                <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
+                    <div class="panel-heading" style="padding:16px;">
+                        <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-file"></span> Auscencias</h3>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!--SIDE PANEL-->
+        <div class="col-md-4">
+            <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
+                <a href="#glosary" data-toggle="collapse">
+                    <div class="panel-heading" style="padding:16px;">
+                        <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-question-sign"></span> Glosario <span class="caret"></span></h3>
+                    </div>
+                </a>
+                <div class="panel-body collapse" id="glosary">
+                    <label>Reporte de accesos</label>
+                    <p>Realiza una busqueda basada en criterios como Departamento o Trabajador dentro de un periodo determinado y muestra el resumen de accesos relacionados</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
