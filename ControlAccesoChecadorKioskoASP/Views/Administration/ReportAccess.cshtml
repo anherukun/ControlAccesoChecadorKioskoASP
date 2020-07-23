@@ -9,17 +9,54 @@
 <script type="text/javascript">
     var departments = @Html.Raw(Json.Encode(ViewData["Departments"]));
     var employes = @Html.Raw(Json.Encode(ViewData["Employes"]));
+    var selectedEmploye;
+    var validEmploye
 </script>
 
 <div class="row" style="margin-top: 32px">
-    <!--SNACK DE ALERTAS-->
-    <div class="col-md-8 col-md-offset-2 alert alert-danger" id="error-alert-snack" role="alert" style="margin-top: 16px; display:none;">
-        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-        Debes completar correctamente el formulario
-    </div>
-    <div class="col-md-8 col-md-offset-2 alert alert-success" id="success-alert-snack" role="alert" style="margin-top: 16px; display:none;">
-        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
-        Los cambios se han guardado correctamente
+    <!--SNACK DE ALERTAS--> 
+    <div>
+        <div class="col-md-8 col-md-offset-2 alert alert-danger" id="error-alert-snack" role="alert" style="margin-top: 16px; display:none;">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            Debes completar correctamente el formulario
+        </div>
+        <div class="col-md-8 col-md-offset-2 alert alert-success" id="success-alert-snack" role="alert" style="margin-top: 16px; display:none;">
+            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+            Los cambios se han guardado correctamente
+        </div>
+
+        <script type="text/javascript">
+            function showErrorMessage(time, message) {
+                playsound(0);
+
+                document.getElementById("error-alert-snack").style.display = "block";
+                document.getElementById("error-alert-snack").innerHTML = message;
+                if (time == null) {
+                    document.getElementById("error-alert-snack").style.display = "none";
+                    document.getElementById("error-alert-snack").innerHTML = message;
+                } else {
+                    setTimeout(() => {
+                        document.getElementById("error-alert-snack").style.display = "none";
+                        document.getElementById("error-alert-snack").innerHTML = message;
+                    }, time * 1000);
+                }
+            }
+            function showSuccessMessage(time, message) {
+                playsound(1);
+
+                document.getElementById("success-alert-snack").style.display = "block";
+                document.getElementById("success-alert-snack").innerHTML = message;
+                if (time == null) {
+                    document.getElementById("success-alert-snack").style.display = "none";
+                    document.getElementById("success-alert-snack").innerHTML = message;
+                } else {
+                    setTimeout(() => {
+                        document.getElementById("success-alert-snack").style.display = "none";
+                        document.getElementById("success-alert-snack").innerHTML = message;
+                    }, time * 1000);
+                }
+            }
+        </script>
     </div>
 
     <!--FORMULARIOS-->
@@ -52,6 +89,27 @@
                             }
                         }
 
+                        function validateIDEmploye() {
+                            var input = document.forms["form-2"]["employeId"]
+
+                            if (Number(input.value) < 0) {
+                                input.value = 0;
+                            }
+                            if (input.value.length == 6) {
+                                selectedEmploye = employes.find(x => x.EmployeId === Number(input.value));
+
+                                if (selectedEmploye != null) {
+                                    document.getElementById("employeName").innerHTML = selectedEmploye.Name;
+                                    validEmploye = true;
+                                }
+
+                            } else {
+                                selectedEmploye = null;
+                                validEmploye = false;
+                                document.getElementById("employeName").innerHTML = "";
+                            }
+                        }
+
                         function validateSubmition(option) {
                             var form;
                             switch (option) {
@@ -70,7 +128,7 @@
                                     var employeid = form["employeId"].value;
                                     var date1 = form["datestart"].value;
                                     var date2 = form["dateend"].value;
-                                    if (employeid != null && date1 != "" && date2 != "") {
+                                    if (validEmploye == true && date1 != "" && date2 != "") {
                                         return true;
                                     }
                                     break;
@@ -85,7 +143,8 @@
                                     break;
                                 default:
                             }
-                            alert("Formulario incompleto");
+
+                            showErrorMessage(8, "Los criterios de busqueda estan incompletos")
                             return false;
                         }
                     </script>
@@ -139,9 +198,9 @@
                             {
                                 <div class="form-group" style="margin-top: 16px;">
                                     <label style="width:110px;">Trabajador</label>
-                                    <input class="form-control" type="number" name="employeId" placeholder="Ingresa la ficha Ej. (582509)" />
+                                    <input class="form-control" type="number" name="employeId" placeholder="Ingresa la ficha Ej. (582509)" oninput="validateIDEmploye()" />
                                     <label>Nombre:</label>
-                                    <label>...</label>
+                                    <label id="employeName"></label>
                                 </div>
 
                                 <div class="form-group" style="margin-top: 16px;">
@@ -207,7 +266,7 @@
                         <div style="text-align:right;">
                             <div class="btn-group" hidden>
 
-                                    <script type="text/javascript">
+                                <script type="text/javascript">
                             function downloadMatrixToCSV(option) {
                                 // 1: CompleteMatrix | 2: JustFinalData
 
@@ -229,7 +288,7 @@
                                 }
                             }
 
-                                    </script>
+                                </script>
 
                                 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "exportform" }))
                                 {
