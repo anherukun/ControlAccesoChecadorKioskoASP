@@ -8,7 +8,7 @@ namespace ControlAccesoChecadorKioskoASP.Application
 {
     public class CSVManager
     {
-        public static byte[] FromMatrixToCSVBytes(List<List<object>> keyValuePairs)
+        public static byte[] FromMatrixToCSVBytes(List<List<object>> keyValuePairs, char c)
         {
             int columns = keyValuePairs[0].Count;
 
@@ -19,7 +19,7 @@ namespace ControlAccesoChecadorKioskoASP.Application
                 {
                     if (i != columns - 1)
                     {
-                        result += $"{values[i]};";
+                        result += $"{values[i]}{c}";
                     } else
                         result += $"{values[i]}\n";
                 }

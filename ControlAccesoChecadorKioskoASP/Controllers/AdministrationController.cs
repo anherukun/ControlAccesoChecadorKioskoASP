@@ -64,21 +64,39 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
         }
 
         [HttpPost]
-        public FileResult ExportCompleteMatrixToCSV(string data)
+        public FileResult ExportCompleteMatrixToCommaCSV(string data)
         {
             string json = ApplicationManager.Base64Decode(data);
             List<AccessRegistry> accessRegistries = JsonConvert.DeserializeObject<List<AccessRegistry>>(json);
 
-            return File(CSVManager.FromMatrixToCSVBytes(AccessRegistryRepository.GetCompleteMatrix(accessRegistries)), "application/x-msexcel", "export.csv");
+            return File(CSVManager.FromMatrixToCSVBytes(AccessRegistryRepository.GetCompleteMatrix(accessRegistries), ','), "application/x-msexcel", "export.csv");
             //return File("", "document/csv");
         }
         [HttpPost]
-        public FileResult ExportFinalMatrixToCSV(string data)
+        public FileResult ExportFinalMatrixToCommaCSV(string data)
         {
             string json = ApplicationManager.Base64Decode(data);
             List<AccessRegistry> accessRegistries = JsonConvert.DeserializeObject<List<AccessRegistry>>(json);
 
-            return File(CSVManager.FromMatrixToCSVBytes(AccessRegistryRepository.GetFinalMatrix(accessRegistries)), "application/x-msexcel", "export.csv");
+            return File(CSVManager.FromMatrixToCSVBytes(AccessRegistryRepository.GetFinalMatrix(accessRegistries), ','), "application/x-msexcel", "export.csv");
+            //return File("", "document/csv");
+        }
+        [HttpPost]
+        public FileResult ExportCompleteMatrixToSemicolonCSV(string data)
+        {
+            string json = ApplicationManager.Base64Decode(data);
+            List<AccessRegistry> accessRegistries = JsonConvert.DeserializeObject<List<AccessRegistry>>(json);
+
+            return File(CSVManager.FromMatrixToCSVBytes(AccessRegistryRepository.GetCompleteMatrix(accessRegistries), ';'), "application/x-msexcel", "export.csv");
+            //return File("", "document/csv");
+        }
+        [HttpPost]
+        public FileResult ExportFinalMatrixToSemicolonCSV(string data)
+        {
+            string json = ApplicationManager.Base64Decode(data);
+            List<AccessRegistry> accessRegistries = JsonConvert.DeserializeObject<List<AccessRegistry>>(json);
+
+            return File(CSVManager.FromMatrixToCSVBytes(AccessRegistryRepository.GetFinalMatrix(accessRegistries), ';'), "application/x-msexcel", "export.csv");
             //return File("", "document/csv");
         }
     }
