@@ -245,7 +245,7 @@
                 </a>
                 <div class="panel-body collapse" id="glosary">
                     <label>Hoja de datos (*.csv)</label>
-                    <p>Es una representacion de valores separadas por (;) permitiendo la lectura de la informacion programas como Microsoft Excel</p>
+                    <p>Es una representacion de valores separadas por un caracter en especifico: Comma (,) o Punto y Comma (;). Permitiendo la lectura de la informacion programas como Microsoft Excel</p>
                     <label>Datos interpretados</label>
                     <p>Representa los valores de los registros con informacion de facil lectura</p>
                     <label>Datos interpretados + metadatos</label>
@@ -266,21 +266,31 @@
                         <div style="text-align:right;">
                             <div class="btn-group" hidden>
 
-                                <script type="text/javascript">
+                                    <script type="text/javascript">
                             function downloadMatrixToCSV(option) {
-                                // 1: CompleteMatrix | 2: JustFinalData
+                                // 1: CompleteMatrix (;) | 2: JustFinalData (;) | 3: CompleteMatrix (,) | 4: JustFinalData (,)
 
                                 var form = document.forms["exportform"]
                                 form.method = "POST";
 
                                 switch (option) {
                                     case 1:
-                                        form.action = "@Url.Action("ExportCompleteMatrixToCSV", "Administration")";
+                                        form.action = "@Url.Action("ExportCompleteMatrixToSemicolonCSV", "Administration")";
                                         form.submit();
                                         break;
 
                                     case 2:
-                                        form.action = "@Url.Action("ExportFinalMatrixToCSV", "Administration")";
+                                        form.action = "@Url.Action("ExportFinalMatrixToSemicolonCSV", "Administration")";
+                                        form.submit();
+                                        break;
+
+                                    case 3:
+                                        form.action = "@Url.Action("ExportCompleteMatrixToCommaCSV", "Administration")";
+                                        form.submit();
+                                        break;
+
+                                    case 4:
+                                        form.action = "@Url.Action("ExportFinalMatrixToCommaCSV", "Administration")";
                                         form.submit();
                                         break;
 
@@ -288,7 +298,7 @@
                                 }
                             }
 
-                                </script>
+                                    </script>
 
                                 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "exportform" }))
                                 {
@@ -299,8 +309,10 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li class="dropdown-header"><span class="glyphicon glyphicon-list-alt"></span> Hojas de datos (*.csv)</li>
-                                        <li><a href="#" onclick="downloadMatrixToCSV(1)"> Datos interpretados + metadatos</a></li>
-                                        <li><a href="#" onclick="downloadMatrixToCSV(2)"> Datos interpretados</a></li>
+                                        <li><a href="#" onclick="downloadMatrixToCSV(1)"> Datos interpretados + metadatos <b>(;)</b></a></li>
+                                        <li><a href="#" onclick="downloadMatrixToCSV(3)"> Datos interpretados + metadatos <b>(,)</b></a></li>
+                                        <li><a href="#" onclick="downloadMatrixToCSV(2)"> Datos interpretados <b>(;)</b></a></li>
+                                        <li><a href="#" onclick="downloadMatrixToCSV(4)"> Datos interpretados <b>(,)</b></a></li>
                                     </ul>
                                 }
                             </div>
@@ -345,8 +357,8 @@
                                             int mm = new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Minutes;
                                             string diferenceHours = "--";
                                             string diferenceMinutes = "--";
-                                            diferenceHours = hh > 10 ? $"{hh}" : $"0{hh}";
-                                            diferenceMinutes = mm > 10 ? $"{mm}" : $"0{mm}";
+                                            diferenceHours = hh >= 10 ? $"{hh}" : $"0{hh}";
+                                            diferenceMinutes = mm >= 10 ? $"{mm}" : $"0{mm}";
 
                                             <td>@EgressDateTime.ToShortDateString()</td>
                                             <td>@EgressDateTime.ToShortTimeString()</td>

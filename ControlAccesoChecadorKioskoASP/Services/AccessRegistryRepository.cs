@@ -104,8 +104,8 @@ namespace ControlAccesoChecadorKioskoASP.Services
                     int hh = new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Hours
                         + (new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Days * 24);
                     int mm = new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Minutes;
-                    diferenceHours = hh > 10 ? $"{hh}" : $"0{hh}";
-                    diferenceMinutes = mm > 10 ? $"{mm}" : $"0{mm}";
+                    diferenceHours = hh >= 10 ? $"{hh}" : $"0{hh}";
+                    diferenceMinutes = mm >= 10 ? $"{mm}" : $"0{mm}";
                 }
 
                 // ACCESSREGISTRYID | DEPARTMENTID | EMPLOYEID | EMPLOYENAME | DEPARTMENTNAME | DATE(QUERYDATE) | INGRESSTICKS | INGRESSDATE | INGRESSTIME | EGRESSTICKS | EGRESSDATE | EGRESSTIME | INTIME
@@ -153,8 +153,8 @@ namespace ControlAccesoChecadorKioskoASP.Services
                     int hh = new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Hours
                         + (new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Days * 24);
                     int mm = new DateTime(item.EgressTicks).Subtract(new DateTime(item.IngressTicks)).Minutes;
-                    diferenceHours = hh > 10 ? $"{hh}" : $"0{hh}";
-                    diferenceMinutes = mm > 10 ? $"{mm}" : $"0{mm}";
+                    diferenceHours = hh >= 10 ? $"{hh}" : $"0{hh}";
+                    diferenceMinutes = mm >= 10 ? $"{mm}" : $"0{mm}";
                 }
 
                 // DEPARTMENTID | EMPLOYEID | EMPLOYENAME | DEPARTMENTNAME | INGRESSDATE | INGRESSTIME | EGRESSDATE | EGRESSTIME | INTIME
