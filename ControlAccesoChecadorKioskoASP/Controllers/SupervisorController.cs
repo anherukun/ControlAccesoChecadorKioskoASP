@@ -12,6 +12,7 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
 {
     public class SupervisorController : Controller
     {
+        //https://medium.com/@minhazav/qr-code-scanner-using-html-and-javascript-3895a0c110cd
         // GET: Supervisor
         //public ActionResult Index()
         //{
@@ -50,7 +51,7 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
 
         public ActionResult NewAccessToken()
         {
-            int employeid = 336035;
+            int employeid = 228058;
             AccessToken token = new AccessTokenRepository().Get(employeid);
             string json = "";
             
