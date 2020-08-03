@@ -16,5 +16,7 @@ namespace ControlAccesoChecadorKioskoASP.Application
         {
             return System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String(value));
         }
+
+        public static string GenerateGUID => Guid.NewGuid().ToString().ToUpper();
     }
 }

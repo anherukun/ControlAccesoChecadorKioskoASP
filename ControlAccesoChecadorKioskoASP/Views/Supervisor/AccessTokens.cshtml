@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewBag.Title = "Tarjetas de acceso";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 style="margin-top:32px;">Tarjetas de acceso</h2>
+
+<ul class="nav nav-pills">
+    <li role="presentation"><a href="@Url.Action("NewAccessToken", "Supervisor")">Nuevo Token</a></li>
+    <li role="presentation"><a href="@Url.Action("AccessTokens", "Supervisor")">Probar Token</a></li>
+    <li role="presentation"><a href="@Url.Action("AccessTokens", "Supervisor")">Actualizar</a></li>
+</ul>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Ficha</th>
+            <th scope="col">Trabajador</th>
+            <th scope="col">Creado el</th>
+            <th scope="col" style="width:235px;">Acciones</th>
+        </tr>
+    </thead>
+    @if (ViewData["accessTokens"] as List<ControlAccesoChecadorKioskoASP.Models.AccessToken> != null && (ViewData["accessTokens"] as List<ControlAccesoChecadorKioskoASP.Models.AccessToken>).Count > 0)
+    {
+        <tbody>
+            @{
+                List<ControlAccesoChecadorKioskoASP.Models.AccessToken> accessTokens = ViewData["accessTokens"] as List<ControlAccesoChecadorKioskoASP.Models.AccessToken>;
+
+                foreach (var item in accessTokens)
+                {
+                    DateTime creationDate = new DateTime(item.CreationDate);
+                    <tr>
+                        <td scope="row">@item.Employe.EmployeId</td>
+                        <td>@item.Employe.Name</td>
+                        <td>@creationDate.ToLongDateString()</td>
+                        <td>
+                            @Html.ActionLink("Ver token", "AccessToken", "Supervisor", new { tkn = ControlAccesoChecadorKioskoASP.Application.ApplicationManager.Base64Encode(item.AccessTokenId) }, new { @class = "btn btn-primary btn-sm", style = "width:70px;" })
+                            <a class="btn btn-success btn-sm" style="width:70px;">Renovar</a>
+                            @Html.ActionLink("Eliminar", "DeleteAccessToken", "Supervisor", new { tkn = ControlAccesoChecadorKioskoASP.Application.ApplicationManager.Base64Encode(item.AccessTokenId) }, new { @class = "btn btn-danger btn-sm", style = "width:70px;" })
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    }
+</table>

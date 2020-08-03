@@ -1,0 +1,12 @@
+﻿
+@{
+    ViewBag.Title = "Tarjeta de acceso";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 style="margin-top:32px;">Tarjeta de acceso</h2>
+
+@if (ViewData["accessTokenBytes"] != null)
+{
+    <img src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(ViewData["accessTokenBytes"] as byte[]))" />
+}

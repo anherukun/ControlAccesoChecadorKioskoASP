@@ -62,6 +62,11 @@
     <Reference Include="MySql.Data.Entity.EF6, Version=6.10.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>..\packages\MySql.Data.Entity.6.10.9\lib\net452\MySql.Data.Entity.EF6.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="QRCoder, Version=1.3.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QRCoder.1.3.9\lib\net40\QRCoder.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel" />
     <Reference Include="System.Configuration.Install" />
@@ -132,27 +137,32 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\ApplicationManager.cs" />
     <Compile Include="Application\ClientSideManager.cs" />
     <Compile Include="Application\CSVManager.cs" />
+    <Compile Include="Application\QRCodeManager.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\ConfigurationsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SupervisorController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccessRegistry.cs" />
+    <Compile Include="Models\AccessToken.cs" />
     <Compile Include="Models\ControlAccessCheckerContext.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Employe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AccessRegistryRepository.cs" />
+    <Compile Include="Services\AccessTokenRepository.cs" />
     <Compile Include="Services\DepartmentRepository.cs" />
     <Compile Include="Services\EmployeRepsitory.cs" />
   </ItemGroup>
@@ -173,6 +183,7 @@
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\html5-qrcode.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
@@ -200,6 +211,8 @@
     <Content Include="Views\Configurations\Index.cshtml" />
     <Content Include="Views\Administration\Index.cshtml" />
     <Content Include="Views\Administration\ReportAccess.cshtml" />
+    <Content Include="Views\Supervisor\AccessTokens.cshtml" />
+    <Content Include="Views\Supervisor\AccessToken.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

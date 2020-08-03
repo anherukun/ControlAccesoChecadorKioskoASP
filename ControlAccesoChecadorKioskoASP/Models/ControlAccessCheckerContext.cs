@@ -27,5 +27,6 @@ namespace ControlAccesoChecadorKioskoASP.Models
         public DbSet<Employe> Employes { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<AccessRegistry> AccessRegistries { get; set; }
+        public DbSet<AccessToken> AccessTokens { get; set; }
     }
 }
