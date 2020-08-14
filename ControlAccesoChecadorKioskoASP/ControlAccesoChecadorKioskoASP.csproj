@@ -213,6 +213,8 @@
     <Content Include="Views\Administration\ReportAccess.cshtml" />
     <Content Include="Views\Supervisor\AccessTokens.cshtml" />
     <Content Include="Views\Supervisor\AccessToken.cshtml" />
+    <Content Include="Views\Supervisor\Index.cshtml" />
+    <Content Include="Views\Supervisor\NewAccessToken.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

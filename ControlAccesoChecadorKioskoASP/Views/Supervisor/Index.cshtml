@@ -1,0 +1,90 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 style="margin-top: 32px;">Supervisor</h2>
+
+<div class="row" style="margin-top: 32px">
+    <!--SNACK DE ALERTAS-->
+    <div class="col-md-8 col-md-offset-2 alert alert-danger" id="error-alert-snack" role="alert" style="margin-top: 16px; display:none;">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        Debes completar correctamente el formulario
+    </div>
+    <div class="col-md-8 col-md-offset-2 alert alert-success" id="success-alert-snack" role="alert" style="margin-top: 16px; display:none;">
+        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+        Los cambios se han guardado correctamente
+    </div>
+
+    <div class="row">
+        <!--Links-->
+        <div class="col-md-8">
+            <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
+                <div class="panel-heading" style="padding:16px;">
+                    <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-qrcode"></span> Tarjetas de acceso</h3>
+                </div>
+                <div class="panel-body">
+                    <a href="@Url.Action("AccessTokens", "Supervisor")">
+                        <div>
+                            <h4><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> Ver tarjetas</h4>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
+                <div class="panel-heading" style="padding:16px;">
+                    <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-cd"></span> Copia de seguridad</h3>
+                </div>
+                <div class="panel-body">
+                    <a href="@Url.Action("", "")">
+                        <div>
+                            <h4><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> Crear copia de seguridad</h4>
+                        </div>
+                    </a>
+                    <a href="@Url.Action("", "")">
+                        <div>
+                            <h4><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> Cargar copia de seguridad</h4>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!--SIDE PANEL-->
+        <div class="col-md-4">
+            <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
+                <a href="#glosary" data-toggle="collapse">
+                    <div class="panel-heading" style="padding:16px;">
+                        <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-question-sign"></span> Glosario <span class="caret"></span></h3>
+                    </div>
+                </a>
+                <div class="panel-body collapse" id="glosary">
+                    <ul>
+                        <li>
+                            <label>Tarjetas de acceso</label>
+                            <p>Identificaciones QR referenciadas a los trabajadores</p>
+                        </li>
+
+                        <li>
+                            <label>Copia de seguridad</label>
+                            <p>Es una copia completa de los registros almacenados en el servidor. Formato del archivo (*.data).</p>
+                        </li>
+
+                        <li>
+                            <label>Crear copia de seguridad</label>
+                            <p>Crea un archivo (*.data) con los registros directos de la base de datos. Esto proceso puede ser algo extenso.</p>
+                        </li>
+
+                        <li>
+                            <label>Cargar copia de seguridad</label>
+                            <p>Carga el archivo (*.data) en la base de datos. Esto proceso puede ser algo extenso.
+                                <br /><b>ADVERTENCIA: Si ya existen registros en la base de datos, estos seran eliminados.</b></p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

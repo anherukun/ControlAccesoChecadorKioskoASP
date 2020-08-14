@@ -1,0 +1,148 @@
+﻿
+@{
+    ViewBag.Title = "NewAccessToken";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 style="margin-top: 32px;">Generar tarjeta de acceso</h2>
+
+<script type="text/javascript">
+    // var departments = @Html.Raw(Json.Encode(ViewData["Departments"]));
+    var employes = @Html.Raw(Json.Encode(ViewData["Employes"]));
+    var selectedEmploye;
+    var validEmploye
+</script>
+
+<div class="row" style="margin-top: 32px">
+    <!--SNACK DE ALERTAS-->
+    <div>
+        <div class="col-md-8 col-md-offset-2 alert alert-danger" id="error-alert-snack" role="alert" style="margin-top: 16px; display:none;">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            Debes completar correctamente el formulario
+        </div>
+        <div class="col-md-8 col-md-offset-2 alert alert-success" id="success-alert-snack" role="alert" style="margin-top: 16px; display:none;">
+            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+            Los cambios se han guardado correctamente
+        </div>
+
+        <script type="text/javascript">
+            function showErrorMessage(time, message) {
+                playsound(0);
+
+                document.getElementById("error-alert-snack").style.display = "block";
+                document.getElementById("error-alert-snack").innerHTML = message;
+                if (time == null) {
+                    document.getElementById("error-alert-snack").style.display = "none";
+                    document.getElementById("error-alert-snack").innerHTML = message;
+                } else {
+                    setTimeout(() => {
+                        document.getElementById("error-alert-snack").style.display = "none";
+                        document.getElementById("error-alert-snack").innerHTML = message;
+                    }, time * 1000);
+                }
+            }
+            function showSuccessMessage(time, message) {
+                playsound(1);
+
+                document.getElementById("success-alert-snack").style.display = "block";
+                document.getElementById("success-alert-snack").innerHTML = message;
+                if (time == null) {
+                    document.getElementById("success-alert-snack").style.display = "none";
+                    document.getElementById("success-alert-snack").innerHTML = message;
+                } else {
+                    setTimeout(() => {
+                        document.getElementById("success-alert-snack").style.display = "none";
+                        document.getElementById("success-alert-snack").innerHTML = message;
+                    }, time * 1000);
+                }
+            }
+        </script>
+    </div>
+
+    <!--FORMULARIOS-->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
+                <div class="panel-heading" style="padding:16px;">
+                    <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-book"></span> Formulario</h3>
+                </div>
+                <div class="panel-body">
+                    <script type="text/javascript">
+                        function validateIDEmploye() {
+                            var input = document.forms["form-2"]["employeId"]
+
+                            if (Number(input.value) < 0) {
+                                input.value = 0;
+                            }
+                            if (input.value.length == 6) {
+                                selectedEmploye = employes.find(x => x.EmployeId === Number(input.value));
+
+                                if (selectedEmploye != null) {
+                                    document.getElementById("employeName").innerHTML = selectedEmploye.Name;
+                                    validEmploye = true;
+                                }
+
+                            } else {
+                                selectedEmploye = null;
+                                validEmploye = false;
+                                document.getElementById("employeName").innerHTML = "";
+                            }
+                        }
+
+                        function validateSubmition() {
+                            var form = document.forms["form-2"];
+                            var employeid = form["employeId"].value;
+
+                            if (validEmploye == true) {
+                                return true;
+                            }
+
+                            showErrorMessage(8, "Los criterios de busqueda estan incompletos")
+                            return false;
+                        }
+                    </script>
+
+                    <div class="row col-md-12">
+                        @{using (Html.BeginForm("SubmitAccessToken", "Supervisor", FormMethod.Post, new { @class = "form-inline", id = "form-2", onsubmit = "return validateSubmition()" }))
+                            {
+                                <div class="form-group" style="margin-top: 16px;">
+                                    <label style="width:110px;">Trabajador</label>
+                                    <input class="form-control" type="number" name="employeId" placeholder="Ingresa la ficha Ej. (582509)" oninput="validateIDEmploye()" />
+                                    <label style="margin-left:15px;">Nombre:</label>
+                                    <label id="employeName"></label>
+                                </div>
+                                <br />
+                                <div class="form-group" style="margin-top: 16px;">
+                                    <a class="btn btn-danger" href="@Url.Action("NewAccessToken", "Supervisor")"><span class="glyphicon glyphicon-erase" aria-hidden="true"></span> </a>
+                                </div>
+                                <div class="form-group" style="margin-top: 16px;">
+                                    <button class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Crear token</button>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--SIDE PANEL-->
+        <div class="col-md-4">
+            <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
+                <a href="#glosary" data-toggle="collapse">
+                    <div class="panel-heading" style="padding:16px;">
+                        <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-question-sign"></span> Glosario <span class="caret"></span></h3>
+                    </div>
+                </a>
+                <div class="panel-body collapse" id="glosary">
+                    <ul>
+                        <li>
+                            <label>Tarjetas de acceso</label>
+                            <p>Identificaciones QR referenciadas a los trabajadores</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

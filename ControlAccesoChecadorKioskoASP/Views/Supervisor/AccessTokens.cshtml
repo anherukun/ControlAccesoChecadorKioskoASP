@@ -36,7 +36,7 @@
                         <td>@creationDate.ToLongDateString()</td>
                         <td>
                             @Html.ActionLink("Ver token", "AccessToken", "Supervisor", new { tkn = ControlAccesoChecadorKioskoASP.Application.ApplicationManager.Base64Encode(item.AccessTokenId) }, new { @class = "btn btn-primary btn-sm", style = "width:70px;" })
-                            <a class="btn btn-success btn-sm" style="width:70px;">Renovar</a>
+                            @Html.ActionLink("Renovar", "RenewAccessToken", "Supervisor", new { tkn = ControlAccesoChecadorKioskoASP.Application.ApplicationManager.Base64Encode(item.AccessTokenId) }, new { @class = "btn btn-success btn-sm", style = "width:70px;" })
                             @Html.ActionLink("Eliminar", "DeleteAccessToken", "Supervisor", new { tkn = ControlAccesoChecadorKioskoASP.Application.ApplicationManager.Base64Encode(item.AccessTokenId) }, new { @class = "btn btn-danger btn-sm", style = "width:70px;" })
                         </td>
                     </tr>

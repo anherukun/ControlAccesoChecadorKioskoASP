@@ -14,10 +14,10 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
     {
         //https://medium.com/@minhazav/qr-code-scanner-using-html-and-javascript-3895a0c110cd
         // GET: Supervisor
-        //public ActionResult Index()
-        //{
-        //    return View();
-        //}
+        public ActionResult Index()
+        {
+            return View();
+        }
 
         public ActionResult AccessTokens()
         {
@@ -51,33 +51,53 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
 
         public ActionResult NewAccessToken()
         {
-            int employeid = 228058;
-            AccessToken token = new AccessTokenRepository().Get(employeid);
-            string json = "";
-            
-            if (token == null)
+            ViewData["Employes"] = new EmployeRepsitory().RetriveAll();
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult SubmitAccessToken(int employeid = 0)
+        {
+            if (employeid != 0)
             {
-                token = new AccessToken()
+                AccessToken token = new AccessTokenRepository().Get(employeid);
+                string json = "";
+
+                if (token == null)
                 {
-                    AccessTokenId = ApplicationManager.GenerateGUID,
-                    EmployeId = employeid,
-                    CreationDate = DateTime.Now.Ticks
-                };
-                new AccessTokenRepository().Add(token);
-                json = JsonConvert.SerializeObject(token.AccessTokenId);
-            } 
-            else
-            {
-                token = new AccessTokenRepository().Get(employeid);
-                json = JsonConvert.SerializeObject(token.AccessTokenId);
+                    token = new AccessToken()
+                    {
+                        AccessTokenId = ApplicationManager.GenerateGUID,
+                        EmployeId = employeid,
+                        CreationDate = DateTime.Now.Ticks
+                    };
+                    new AccessTokenRepository().Add(token);
+                    // json = JsonConvert.SerializeObject(token.AccessTokenId);
+
+                    return Redirect(Url.Action("AccessTokens", "Supervisor"));
+                }
+                else
+                    return Redirect(Url.Action("AccessTokens", "Supervisor"));                
             }
-            
-            //byte[] qrcode = QRCodeManager.ToBytes(ApplicationManager.Base64Encode(json));
-            //
-            //
-            //ViewData["imgbytes"] = qrcode;
-            
-            // return View();
+            else
+                return Redirect(Url.Action("NewAccessToken", "Supervisor"));
+        }
+
+        public ActionResult RenewAccessToken(string tkn)
+        {
+            AccessToken accessToken = new AccessTokenRepository().Get(ApplicationManager.Base64Decode(tkn));
+            Employe employe = accessToken.Employe;
+
+            new AccessTokenRepository().Delete(ApplicationManager.Base64Decode(tkn));
+            accessToken = new AccessToken()
+            {
+                AccessTokenId = ApplicationManager.GenerateGUID,
+                EmployeId = employe.EmployeId,
+                CreationDate = DateTime.Now.Ticks
+            };
+            new AccessTokenRepository().Add(accessToken);
+
             return Redirect(Url.Action("AccessTokens", "Supervisor"));
         }
 
