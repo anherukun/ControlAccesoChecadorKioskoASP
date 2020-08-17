@@ -37,6 +37,7 @@ namespace ControlAccesoChecadorKioskoASP.Controllers
                 if (token != null)
                 {
                     json = JsonConvert.SerializeObject(token.AccessTokenId);
+                    ViewData["AccessToken"] = token;
                     ViewData["accessTokenBytes"] = QRCodeManager.ToBytes(ApplicationManager.Base64Encode(json));
                 }
                 else

@@ -8,5 +8,15 @@
 
 @if (ViewData["accessTokenBytes"] != null)
 {
-    <img src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(ViewData["accessTokenBytes"] as byte[]))" />
+    ControlAccesoChecadorKioskoASP.Models.AccessToken token = ViewData["AccessToken"] as ControlAccesoChecadorKioskoASP.Models.AccessToken;
+<div style="width: 5.5cm;">
+    <div style="padding:5px; border: 1px solid black; text-align:center;">
+        <label style="font-size:10pt;">@token.Employe.EmployeId</label>
+        <br />
+        <img style="width: 100%; margin:-10px" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(ViewData["accessTokenBytes"] as byte[]))" />
+        <br />
+        <label style="font-size:10pt;">@token.Employe.Name</label>
+
+    </div>
+</div>
 }
