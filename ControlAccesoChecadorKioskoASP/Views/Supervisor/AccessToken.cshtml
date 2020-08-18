@@ -4,19 +4,54 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2 style="margin-top:32px;">Tarjeta de acceso</h2>
+<h2 class="hidden-print" style="margin-top:32px;">Tarjeta de acceso</h2>
 
 @if (ViewData["accessTokenBytes"] != null)
 {
     ControlAccesoChecadorKioskoASP.Models.AccessToken token = ViewData["AccessToken"] as ControlAccesoChecadorKioskoASP.Models.AccessToken;
-<div style="width: 5.5cm;">
-    <div style="padding:5px; border: 1px solid black; text-align:center;">
-        <label style="font-size:10pt;">@token.Employe.EmployeId</label>
-        <br />
-        <img style="width: 100%; margin:-10px" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(ViewData["accessTokenBytes"] as byte[]))" />
-        <br />
-        <label style="font-size:10pt;">@token.Employe.Name</label>
+    DateTime creationDate = new DateTime(token.CreationDate);
 
+    <div class="visible-print" style="width: 5.5cm;">
+        <div style="padding:5px; border: 1px solid black; text-align:center;">
+            <label style="font-size:10pt;">@token.Employe.EmployeId</label>
+            <br />
+            <img style="width: 100%; margin:-10px" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(ViewData["accessTokenBytes"] as byte[]))" />
+            <br />
+            <label style="font-size:10pt;">@token.Employe.Name</label>
+
+        </div>
     </div>
-</div>
+
+    <div class="row hidden-print">
+        <div class="col-md-4">
+            <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
+                <a onclick="window.print()">
+                    <div class="panel-heading" style="padding:16px;">
+                        <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-print"></span> Imprimir</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="panel panel-default" style="padding:0px; margin-top: 16px;">
+                <div class="panel-heading" style="padding:16px;">
+                    <h3 style="margin-top:0px; margin-bottom:0px;"><span class="glyphicon glyphicon-qrcode"></span> Informacion del token</h3>
+                </div>
+                <div class="panel-body">
+                    <h3>Hash-Token: </h3>
+                    <p>@token.AccessTokenId</p>
+
+                    <h3>Trabajador: </h3>
+                    <p>@token.Employe.Name</p>
+
+                    <h3>Ficha: </h3>
+                    <p>@token.Employe.EmployeId</p>
+
+                    <h3>Creado el: </h3>
+                    <p>@creationDate.ToLongDateString() @@ @creationDate.ToShortTimeString() </p>
+                </div>
+            </div>
+        </div>
+    </div>
 }
