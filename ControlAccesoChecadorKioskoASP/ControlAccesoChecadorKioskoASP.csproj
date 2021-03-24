@@ -142,6 +142,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\ConfigurationsController.cs" />
+    <Compile Include="Controllers\EmployeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -200,6 +201,7 @@
     <Content Include="Views\Configurations\Index.cshtml" />
     <Content Include="Views\Administration\Index.cshtml" />
     <Content Include="Views\Administration\ReportAccess.cshtml" />
+    <Content Include="Views\Employe\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

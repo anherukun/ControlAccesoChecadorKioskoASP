@@ -18,6 +18,8 @@
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method
             //  to avoid creating duplicate seed data.
+
+            // context.Database.ExecuteSqlCommand("Create FUNCTION TruncateTime(dateValue DateTime) RETURNS date return Date(dateValue)");
         }
     }
 }
